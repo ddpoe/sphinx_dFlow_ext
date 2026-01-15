@@ -1,0 +1,1447 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>elastic_net_modules.results_manager &mdash; Elastic Net Analysis - Workflow Documentation 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/workflow.css?v=4ddc2446" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/workflow.js?v=030014fe"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+    }
+});
+</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Elastic Net Analysis - Workflow Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow_index.html">Auto-Discovery Workflow Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#with-custom-options">With Custom Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#configuration-in-conf-py">Configuration in conf.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#live-example">Live Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#discovered-workflow-markers">Discovered Workflow Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Python Module Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.model_selection">Model Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets"><code class="docutils literal notranslate"><span class="pre">evaluate_all_feature_sets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.apply_1se_rule"><code class="docutils literal notranslate"><span class="pre">apply_1se_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_final_classifier"><code class="docutils literal notranslate"><span class="pre">build_final_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_calibrated_classifier"><code class="docutils literal notranslate"><span class="pre">build_calibrated_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.find_optimal_threshold"><code class="docutils literal notranslate"><span class="pre">find_optimal_threshold()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.data_loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor"><code class="docutils literal notranslate"><span class="pre">AdataProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_line"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_info"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.adata"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.adata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_coords_obsm_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_coords_obsm_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_params_uns_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_params_uns_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_labels_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_labels_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_label_colors_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_label_colors_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.__init__"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_random_forest_feature_set"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_random_forest_feature_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phate_coordinates"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phate_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phase_labels"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phase_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.process_all"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.process_all()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.feature_engineering">Feature Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.log_transform_features"><code class="docutils literal notranslate"><span class="pre">log_transform_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations"><code class="docutils literal notranslate"><span class="pre">generate_all_feature_combinations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.logsumexp10"><code class="docutils literal notranslate"><span class="pre">logsumexp10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.compute_composite_features"><code class="docutils literal notranslate"><span class="pre">compute_composite_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary"><code class="docutils literal notranslate"><span class="pre">print_feature_set_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation_gmm"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation_gmm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset"><code class="docutils literal notranslate"><span class="pre">apply_percentile_filter_from_subset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net"><code class="docutils literal notranslate"><span class="pre">prepare_data_for_elastic_net()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.nested_cv">Nested Cross-Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.nested_cv.nested_cv_single_feature_set"><code class="docutils literal notranslate"><span class="pre">nested_cv_single_feature_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.results_manager">Results Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#key-features">Key Features:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#typical-usage-flow">Typical Usage Flow:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#classes">Classes:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#functions">Functions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.generate_analysis_id"><code class="docutils literal notranslate"><span class="pre">generate_analysis_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_preprocessing_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.get_checkpoint_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.add_preprocessing_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.create_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.visualization">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_model_selection"><code class="docutils literal notranslate"><span class="pre">plot_model_selection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_coefficient_stability"><code class="docutils literal notranslate"><span class="pre">plot_coefficient_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_feature_importance"><code class="docutils literal notranslate"><span class="pre">plot_feature_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_threshold_sweep"><code class="docutils literal notranslate"><span class="pre">plot_threshold_sweep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_null_distribution"><code class="docutils literal notranslate"><span class="pre">plot_null_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution"><code class="docutils literal notranslate"><span class="pre">plot_bootstrap_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_performance_summary"><code class="docutils literal notranslate"><span class="pre">plot_performance_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_scatter_kde"><code class="docutils literal notranslate"><span class="pre">plot_scatter_kde()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#nested-cv-analysis">Nested CV Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#feature-set-exploration">Feature Set Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#model-evaluation">Model Evaluation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Elastic Net Analysis - Workflow Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">elastic_net_modules.results_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for elastic_net_modules.results_manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Results Organization &amp; Management for Elastic Net Analysis</span>
+
+<span class="sd">This module provides tools for organizing and tracking Elastic Net analysis outputs.</span>
+<span class="sd">Creates unique analysis identifiers and manages all results in structured directories.</span>
+
+<span class="sd">Key Features:</span>
+<span class="sd">=============</span>
+<span class="sd">- Unique analysis IDs (never overwrite previous runs)</span>
+<span class="sd">- Automatic directory structure creation</span>
+<span class="sd">- Metadata tracking (who, what, when, how)</span>
+<span class="sd">- Dual-format saving (CSV + PKL)</span>
+<span class="sd">- Integrated plot management</span>
+<span class="sd">- README generation for human readability</span>
+
+<span class="sd">Typical Usage Flow:</span>
+<span class="sd">===================</span>
+
+<span class="sd"># Simple case - just cell line and condition</span>
+<span class="sd">manager = ElasticNetResultsManager(</span>
+<span class="sd">    cell_line=&quot;CFPAC&quot;,</span>
+<span class="sd">    condition=&quot;control&quot;</span>
+<span class="sd">)</span>
+<span class="sd"># → analysis_id: &quot;CFPAC_control_20251113_142315&quot;</span>
+
+<span class="sd"># With additional info (e.g., cell cycle phase, treatment time)</span>
+<span class="sd">manager = ElasticNetResultsManager(</span>
+<span class="sd">    cell_line=&quot;HPAC&quot;,</span>
+<span class="sd">    condition=&quot;ERK2000&quot;,</span>
+<span class="sd">    additional_info=&quot;g0g1&quot;</span>
+<span class="sd">)</span>
+<span class="sd"># → analysis_id: &quot;HPAC_ERK2000_g0g1_20251113_150430&quot;</span>
+
+<span class="sd"># Double loop example (automated batch processing)</span>
+<span class="sd">for cell_line in [&#39;CFPAC&#39;, &#39;HPAC&#39;, &#39;BxPC3&#39;]:</span>
+<span class="sd">    for condition in [&#39;control&#39;, &#39;ERK2000&#39;, &#39;ERK5000&#39;]:</span>
+<span class="sd">        # Optional: Add filtering info</span>
+<span class="sd">        additional_info = &quot;g0g1_filtered&quot; if filter_2n else &quot;allcells&quot;</span>
+<span class="sd">        </span>
+<span class="sd">        manager = ElasticNetResultsManager(</span>
+<span class="sd">            cell_line=cell_line,</span>
+<span class="sd">            condition=condition,</span>
+<span class="sd">            additional_info=additional_info</span>
+<span class="sd">        )</span>
+<span class="sd">        </span>
+<span class="sd">        # Run full analysis...</span>
+<span class="sd">        # All results automatically organized by manager</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">========</span>
+<span class="sd">- ElasticNetResultsManager: Main class for managing analysis outputs</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">==========</span>
+<span class="sd">- generate_analysis_id: Create unique identifier for analysis run</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
+
+
+<div class="viewcode-block" id="generate_analysis_id">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.generate_analysis_id">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_analysis_id</span><span class="p">(</span>
+    <span class="n">cell_line</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">additional_info</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate unique identifier for analysis run.</span>
+<span class="sd">    </span>
+<span class="sd">    Format: </span>
+<span class="sd">        - With additional_info: {cell_line}_{condition}_{additional_info}_{timestamp}</span>
+<span class="sd">        - Without: {cell_line}_{condition}_{timestamp}</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cell_line : str</span>
+<span class="sd">        Cell line name (e.g., &#39;CFPAC&#39;, &#39;HPAC&#39;, &#39;Pa02C&#39;)</span>
+<span class="sd">        Automatically converted to safe format (alphanumeric + underscores)</span>
+<span class="sd">    condition : str</span>
+<span class="sd">        Experimental condition (e.g., &#39;control&#39;, &#39;ERK2000&#39;, &#39;Fra1_KD&#39;)</span>
+<span class="sd">        Automatically converted to safe format</span>
+<span class="sd">    additional_info : str, optional</span>
+<span class="sd">        Optional additional descriptor (e.g., &#39;g0g1&#39;, &#39;nonprolif&#39;, &#39;allcells&#39;, &#39;48h&#39;)</span>
+<span class="sd">        If None, omitted from ID</span>
+<span class="sd">        Automatically converted to safe format</span>
+<span class="sd">    timestamp : str, optional</span>
+<span class="sd">        Timestamp in format YYYYMMDD_HHMMSS</span>
+<span class="sd">        If None, auto-generated from current time</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    analysis_id : str</span>
+<span class="sd">        Unique identifier, filesystem-safe</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Minimal usage</span>
+<span class="sd">    &gt;&gt;&gt; generate_analysis_id(&quot;CFPAC&quot;, &quot;control&quot;)</span>
+<span class="sd">    &#39;CFPAC_control_20251113_142315&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # With cell cycle phase info</span>
+<span class="sd">    &gt;&gt;&gt; generate_analysis_id(&quot;HPAC&quot;, &quot;ERK2000&quot;, &quot;g0g1&quot;)</span>
+<span class="sd">    &#39;HPAC_ERK2000_g0g1_20251113_150430&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # With treatment duration</span>
+<span class="sd">    &gt;&gt;&gt; generate_analysis_id(&quot;BxPC3&quot;, &quot;Fra1_KD&quot;, &quot;48h&quot;)</span>
+<span class="sd">    &#39;BxPC3_Fra1_KD_48h_20251113_160530&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # Reproducible ID (for testing)</span>
+<span class="sd">    &gt;&gt;&gt; generate_analysis_id(&quot;CFPAC&quot;, &quot;control&quot;, &quot;g0g1&quot;, &quot;20251113_120000&quot;)</span>
+<span class="sd">    &#39;CFPAC_control_g0g1_20251113_120000&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # In a double loop</span>
+<span class="sd">    &gt;&gt;&gt; for cell_line in [&#39;CFPAC&#39;, &#39;HPAC&#39;]:</span>
+<span class="sd">    ...     for condition in [&#39;control&#39;, &#39;ERK2000&#39;]:</span>
+<span class="sd">    ...         aid = generate_analysis_id(cell_line, condition, &quot;g0g1&quot;)</span>
+<span class="sd">    ...         print(aid)</span>
+<span class="sd">    &#39;CFPAC_control_g0g1_20251113_142315&#39;</span>
+<span class="sd">    &#39;CFPAC_ERK2000_g0g1_20251113_142316&#39;</span>
+<span class="sd">    &#39;HPAC_control_g0g1_20251113_142317&#39;</span>
+<span class="sd">    &#39;HPAC_ERK2000_g0g1_20251113_142318&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - IDs are filesystem-safe (spaces/special chars converted to underscores)</span>
+<span class="sd">    - Timestamp ensures uniqueness even for same cell line/condition</span>
+<span class="sd">    - additional_info is optional for flexibility</span>
+<span class="sd">    - All components sanitized to prevent filesystem issues</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Sanitize inputs (replace spaces and special chars with underscores)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sanitize</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert string to filesystem-safe format.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+        <span class="c1"># Replace anything that&#39;s not alphanumeric or underscore with underscore</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[^a-zA-Z0-9_]&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    
+    <span class="n">cell_line_safe</span> <span class="o">=</span> <span class="n">sanitize</span><span class="p">(</span><span class="n">cell_line</span><span class="p">)</span>
+    <span class="n">condition_safe</span> <span class="o">=</span> <span class="n">sanitize</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+    
+    <span class="c1"># Generate timestamp if not provided</span>
+    <span class="k">if</span> <span class="n">timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Build ID</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">cell_line_safe</span><span class="p">,</span> <span class="n">condition_safe</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">additional_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sanitize</span><span class="p">(</span><span class="n">additional_info</span><span class="p">))</span>
+    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ElasticNetResultsManager">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ElasticNetResultsManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages all outputs for a single Elastic Net analysis run.</span>
+<span class="sd">    </span>
+<span class="sd">    Automatically organizes:</span>
+<span class="sd">    - Model evaluation results (CSV + PKL)</span>
+<span class="sd">    - Diagnostic plots (organized by type)</span>
+<span class="sd">    - Final trained classifier</span>
+<span class="sd">    - Preprocessing outputs (GMM histograms)</span>
+<span class="sd">    - Warnings and logs</span>
+<span class="sd">    - Metadata (who, what, when, how)</span>
+<span class="sd">    </span>
+<span class="sd">    Design Philosophy:</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    - One manager = One complete analysis</span>
+<span class="sd">    - Automatic directory creation</span>
+<span class="sd">    - Prevents overwrites (unique IDs)</span>
+<span class="sd">    - Tracks provenance (metadata)</span>
+<span class="sd">    - Easy to use (minimal boilerplate)</span>
+<span class="sd">    </span>
+<span class="sd">    Directory Structure Created:</span>
+<span class="sd">    ----------------------------</span>
+<span class="sd">    results/</span>
+<span class="sd">    └── {analysis_id}/</span>
+<span class="sd">        ├── metadata.json              ← Analysis configuration</span>
+<span class="sd">        ├── README.md                  ← Human-readable summary</span>
+<span class="sd">        ├── all_models.csv             ← Excel-compatible results</span>
+<span class="sd">        ├── all_models.pkl             ← Python-compatible (preserves types)</span>
+<span class="sd">        ├── checkpoints/               ← Temporary (cleaned up after use)</span>
+<span class="sd">        ├── warnings/</span>
+<span class="sd">        │   └── warnings_log_{timestamp}.csv</span>
+<span class="sd">        ├── plots/</span>
+<span class="sd">        │   ├── model_selection.png</span>
+<span class="sd">        │   ├── coefficient_stability.png</span>
+<span class="sd">        │   └── ...</span>
+<span class="sd">        ├── models/</span>
+<span class="sd">        │   └── final_classifier.pkl</span>
+<span class="sd">        └── preprocessing/</span>
+<span class="sd">            ├── ploidy_gmm_histogram.png</span>
+<span class="sd">            └── proliferation_gmm_histogram.png</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Initialize manager (creates unique folder + metadata)</span>
+<span class="sd">    &gt;&gt;&gt; manager = ElasticNetResultsManager(</span>
+<span class="sd">    ...     cell_line=&quot;CFPAC&quot;,</span>
+<span class="sd">    ...     condition=&quot;control&quot;,</span>
+<span class="sd">    ...     additional_info=&quot;g0g1&quot;</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; print(manager.analysis_id)</span>
+<span class="sd">    &#39;CFPAC_control_g0g1_20251113_142315&#39;</span>
+<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &gt;&gt;&gt; # All outputs automatically organized</span>
+<span class="sd">    &gt;&gt;&gt; manager.save_model_results(results_df)  # Saves CSV + PKL</span>
+<span class="sd">    &gt;&gt;&gt; manager.save_plot(fig, &quot;model_selection&quot;)  # Saves to plots/</span>
+<span class="sd">    &gt;&gt;&gt; manager.save_final_classifier(classifier)  # Saves to models/</span>
+<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &gt;&gt;&gt; # Generate human-readable summary</span>
+<span class="sd">    &gt;&gt;&gt; manager.create_summary()</span>
+<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &gt;&gt;&gt; # Double loop example (batch processing)</span>
+<span class="sd">    &gt;&gt;&gt; for cell_line in [&#39;CFPAC&#39;, &#39;HPAC&#39;, &#39;BxPC3&#39;]:</span>
+<span class="sd">    ...     for condition in [&#39;control&#39;, &#39;ERK2000&#39;]:</span>
+<span class="sd">    ...         manager = ElasticNetResultsManager(</span>
+<span class="sd">    ...             cell_line=cell_line,</span>
+<span class="sd">    ...             condition=condition,</span>
+<span class="sd">    ...             additional_info=&quot;g0g1&quot;</span>
+<span class="sd">    ...         )</span>
+<span class="sd">    ...         # Run analysis with this manager...</span>
+<span class="sd">    ...         results_df = evaluate_all_feature_sets(</span>
+<span class="sd">    ...             adata, y, feature_combos, param_grid,</span>
+<span class="sd">    ...             results_manager=manager</span>
+<span class="sd">    ...         )</span>
+<span class="sd">    ...         manager.save_model_results(results_df)</span>
+<span class="sd">    ...         # ...etc</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.__init__">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cell_line</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">condition</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">additional_info</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;results&quot;</span><span class="p">,</span>
+        <span class="n">analysis_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize results manager for a new analysis.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cell_line : str</span>
+<span class="sd">            Cell line name (e.g., &#39;CFPAC&#39;, &#39;HPAC&#39;, &#39;Pa02C&#39;)</span>
+<span class="sd">        condition : str</span>
+<span class="sd">            Experimental condition (e.g., &#39;control&#39;, &#39;ERK2000&#39;, &#39;Fra1_KD&#39;)</span>
+<span class="sd">        additional_info : str, optional</span>
+<span class="sd">            Optional descriptor (e.g., &#39;g0g1&#39;, &#39;nonprolif&#39;, &#39;allcells&#39;, &#39;48h&#39;)</span>
+<span class="sd">            If None, omitted from analysis_id</span>
+<span class="sd">        base_dir : str</span>
+<span class="sd">            Base directory for all results (default: &#39;results&#39;)</span>
+<span class="sd">        analysis_id : str, optional</span>
+<span class="sd">            Use specific analysis ID (for loading existing results)</span>
+<span class="sd">            If None, generates new ID with current timestamp</span>
+<span class="sd">            </span>
+<span class="sd">        Side Effects</span>
+<span class="sd">        ------------</span>
+<span class="sd">        - Creates directory structure under {base_dir}/{analysis_id}/</span>
+<span class="sd">        - Saves initial metadata.json</span>
+<span class="sd">        </span>
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        analysis_id : str</span>
+<span class="sd">            Unique identifier for this analysis</span>
+<span class="sd">        cell_line : str</span>
+<span class="sd">            Cell line name (stored for metadata)</span>
+<span class="sd">        condition : str</span>
+<span class="sd">            Experimental condition (stored for metadata)</span>
+<span class="sd">        additional_info : str or None</span>
+<span class="sd">            Additional descriptor (stored for metadata)</span>
+<span class="sd">        base_dir : Path</span>
+<span class="sd">            Root directory for all results</span>
+<span class="sd">        analysis_dir : Path</span>
+<span class="sd">            Full path to this analysis folder</span>
+<span class="sd">        dirs : dict</span>
+<span class="sd">            Paths to all subdirectories:</span>
+<span class="sd">            - &#39;checkpoints&#39;: For evaluate_all_feature_sets()</span>
+<span class="sd">            - &#39;warnings&#39;: For warning logs</span>
+<span class="sd">            - &#39;plots&#39;: For diagnostic plots</span>
+<span class="sd">            - &#39;models&#39;: For final classifier</span>
+<span class="sd">            - &#39;preprocessing&#39;: For GMM histograms</span>
+<span class="sd">        metadata : dict</span>
+<span class="sd">            Analysis configuration and parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell_line</span> <span class="o">=</span> <span class="n">cell_line</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">additional_info</span> <span class="o">=</span> <span class="n">additional_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_dir</span><span class="p">)</span>
+        
+        <span class="c1"># Generate or use provided analysis ID</span>
+        <span class="k">if</span> <span class="n">analysis_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span> <span class="o">=</span> <span class="n">generate_analysis_id</span><span class="p">(</span><span class="n">cell_line</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span> <span class="o">=</span> <span class="n">analysis_id</span>
+        
+        <span class="c1"># Set up directory structure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;checkpoints&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;checkpoints&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;warnings&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;warnings&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;plots&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;models&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;models&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;preprocessing&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;preprocessing&#39;</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Create all directories</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dir_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">dir_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;analysis_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span><span class="p">,</span>
+            <span class="s1">&#39;cell_line&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_line</span><span class="p">,</span>
+            <span class="s1">&#39;condition&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span>
+            <span class="s1">&#39;additional_info&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_info</span><span class="p">,</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s1">&#39;created_at&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Save initial metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.save_metadata">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save or update analysis metadata.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Arbitrary metadata to save/update</span>
+<span class="sd">            Common keys:</span>
+<span class="sd">            - data_file: str (path to input data)</span>
+<span class="sd">            - n_cells_original: int</span>
+<span class="sd">            - n_cells_final: int</span>
+<span class="sd">            - filter_2n: bool</span>
+<span class="sd">            - fra1_filter_config: dict</span>
+<span class="sd">            - hyperparameters: dict</span>
+<span class="sd">            - cv_config: dict</span>
+<span class="sd">            - selected_model: dict</span>
+<span class="sd">            </span>
+<span class="sd">        Saves to:</span>
+<span class="sd">        ---------</span>
+<span class="sd">        {analysis_dir}/metadata.json</span>
+<span class="sd">        </span>
+<span class="sd">        Example Metadata Structure:</span>
+<span class="sd">        ---------------------------</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;analysis_id&quot;: &quot;CFPAC_control_g0g1_20251113_142315&quot;,</span>
+<span class="sd">            &quot;cell_line&quot;: &quot;CFPAC&quot;,</span>
+<span class="sd">            &quot;condition&quot;: &quot;control&quot;,</span>
+<span class="sd">            &quot;additional_info&quot;: &quot;g0g1&quot;,</span>
+<span class="sd">            &quot;timestamp&quot;: &quot;2025-11-13T14:23:15&quot;,</span>
+<span class="sd">            &quot;data_file&quot;: &quot;/path/to/data.h5ad&quot;,</span>
+<span class="sd">            &quot;n_cells_original&quot;: 50000,</span>
+<span class="sd">            &quot;n_cells_final&quot;: 32000,</span>
+<span class="sd">            &quot;filter_2n&quot;: true,</span>
+<span class="sd">            &quot;fra1_filter&quot;: {</span>
+<span class="sd">                &quot;enabled&quot;: true,</span>
+<span class="sd">                &quot;percentile&quot;: 90,</span>
+<span class="sd">                &quot;reference&quot;: &quot;nonprolif&quot;</span>
+<span class="sd">            },</span>
+<span class="sd">            &quot;hyperparameters&quot;: {&quot;C&quot;: [...], &quot;l1_ratio&quot;: [...]},</span>
+<span class="sd">            &quot;cv_config&quot;: {&quot;outer_splits&quot;: 10, ...},</span>
+<span class="sd">            &quot;selected_model&quot;: {</span>
+<span class="sd">                &quot;model_id&quot;: 42,</span>
+<span class="sd">                &quot;model_name&quot;: &quot;CycD1_CDK4_p27&quot;,</span>
+<span class="sd">                &quot;mean_auroc&quot;: 0.941</span>
+<span class="sd">            }</span>
+<span class="sd">        }</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Called automatically on __init__</span>
+<span class="sd">        - Can be called multiple times to update metadata</span>
+<span class="sd">        - Updates are merged with existing metadata</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Update metadata with new kwargs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        
+        <span class="c1"># Add update timestamp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;last_updated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        
+        <span class="c1"># Save to file</span>
+        <span class="n">metadata_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;metadata.json&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.save_model_results">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_model_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save model evaluation results in dual format.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        results_df : pd.DataFrame</span>
+<span class="sd">            Output from evaluate_all_feature_sets()</span>
+<span class="sd">            </span>
+<span class="sd">        Saves to:</span>
+<span class="sd">        ---------</span>
+<span class="sd">        - {analysis_dir}/all_models.csv  # Human-readable, Excel-compatible</span>
+<span class="sd">        - {analysis_dir}/all_models.pkl  # Preserves Python types (lists, dicts)</span>
+<span class="sd">        </span>
+<span class="sd">        Why Both Formats?</span>
+<span class="sd">        -----------------</span>
+<span class="sd">        - CSV: Easy to open in Excel, share with collaborators</span>
+<span class="sd">        - PKL: Preserves list/dict types, can reload for further analysis</span>
+<span class="sd">        </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; results_df = evaluate_all_feature_sets(...)</span>
+<span class="sd">        &gt;&gt;&gt; manager.save_model_results(results_df)</span>
+<span class="sd">        &gt;&gt;&gt; # Later, reload:</span>
+<span class="sd">        &gt;&gt;&gt; results_df = manager.load_model_results()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">csv_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;all_models.csv&#39;</span>
+        <span class="n">pkl_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;all_models.pkl&#39;</span>
+        
+        <span class="c1"># Save CSV (human-readable)</span>
+        <span class="n">results_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1"># Save PKL (preserves types)</span>
+        <span class="n">results_df</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">pkl_path</span><span class="p">)</span>
+        
+        <span class="c1"># Update metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span>
+            <span class="n">n_models_evaluated</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">results_df</span><span class="p">),</span>
+            <span class="n">results_saved_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.load_model_results">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_model_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load previously saved model results.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        results_df : pd.DataFrame</span>
+<span class="sd">            Full results with Python types preserved (from PKL)</span>
+<span class="sd">            </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If all_models.pkl doesn&#39;t exist</span>
+<span class="sd">            </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; # Load existing analysis</span>
+<span class="sd">        &gt;&gt;&gt; manager = ElasticNetResultsManager.load(&quot;CFPAC_control_g0g1_20251113_142315&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; results_df = manager.load_model_results()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pkl_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;all_models.pkl&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pkl_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No results file found at </span><span class="si">{</span><span class="n">pkl_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">pkl_path</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.save_plot">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_plot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fig</span><span class="p">:</span> <span class="s1">&#39;Figure&#39;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span>
+        <span class="n">bbox_inches</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;tight&#39;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save plot with automatic naming and organization.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fig : matplotlib.Figure</span>
+<span class="sd">            Figure to save</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Base name (without extension)</span>
+<span class="sd">            Examples: &#39;model_selection&#39;, &#39;coefficient_stability&#39;, &#39;threshold_sweep&#39;</span>
+<span class="sd">        dpi : int</span>
+<span class="sd">            Resolution (default 150 for publication quality)</span>
+<span class="sd">        bbox_inches : str</span>
+<span class="sd">            Bounding box (default &#39;tight&#39; to avoid clipping)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        save_path : Path</span>
+<span class="sd">            Full path to saved plot</span>
+<span class="sd">            </span>
+<span class="sd">        Saves to:</span>
+<span class="sd">        ---------</span>
+<span class="sd">        {analysis_dir}/plots/{name}.png</span>
+<span class="sd">        </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plot_model_selection(results_df, selection)</span>
+<span class="sd">        &gt;&gt;&gt; manager.save_plot(fig, &#39;model_selection&#39;)</span>
+<span class="sd">        PosixPath(&#39;.../CFPAC_control_g0g1_20251113_142315/plots/model_selection.png&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">save_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="p">[</span><span class="s1">&#39;plots&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.png&quot;</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">bbox_inches</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>  <span class="c1"># Free memory</span>
+        <span class="k">return</span> <span class="n">save_path</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.save_preprocessing_plot">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_preprocessing_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">:</span> <span class="s1">&#39;Figure&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save preprocessing diagnostic plot (GMM histograms).</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fig : matplotlib.Figure</span>
+<span class="sd">            Histogram from GMM labeling</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Plot name (e.g., &#39;ploidy_gmm_histogram&#39;, &#39;proliferation_gmm_histogram&#39;)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        save_path : Path</span>
+<span class="sd">            Full path to saved plot</span>
+<span class="sd">            </span>
+<span class="sd">        Saves to:</span>
+<span class="sd">        ---------</span>
+<span class="sd">        {analysis_dir}/preprocessing/{name}.png</span>
+<span class="sd">        </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; # In label_ploidy_and_proliferation_gmm()</span>
+<span class="sd">        &gt;&gt;&gt; fig, ax = plt.subplots()</span>
+<span class="sd">        &gt;&gt;&gt; # ... create histogram ...</span>
+<span class="sd">        &gt;&gt;&gt; manager.save_preprocessing_plot(fig, &#39;ploidy_gmm_histogram&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">save_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="p">[</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.png&quot;</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">save_path</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.save_final_classifier">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_final_classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classifier_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save final trained classifier for deployment.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        classifier_dict : dict</span>
+<span class="sd">            Output from build_final_classifier()</span>
+<span class="sd">            Contains: model, scaler, feature_names, optimal_threshold, etc.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        save_path : Path</span>
+<span class="sd">            Full path to saved classifier</span>
+<span class="sd">            </span>
+<span class="sd">        Saves to:</span>
+<span class="sd">        ---------</span>
+<span class="sd">        {analysis_dir}/models/final_classifier.pkl</span>
+<span class="sd">        </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; classifier = build_final_classifier(...)</span>
+<span class="sd">        &gt;&gt;&gt; manager.save_final_classifier(classifier)</span>
+<span class="sd">        &gt;&gt;&gt; # Later, reload:</span>
+<span class="sd">        &gt;&gt;&gt; classifier = manager.load_final_classifier()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">save_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="s1">&#39;final_classifier.pkl&#39;</span>
+        <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">classifier_dict</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
+        
+        <span class="c1"># Update metadata with model info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span>
+            <span class="n">final_classifier_saved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">classifier_saved_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">save_path</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.load_final_classifier">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_final_classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load previously saved classifier.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        classifier_dict : dict</span>
+<span class="sd">            Complete classifier package ready for deployment</span>
+<span class="sd">            </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If final_classifier.pkl doesn&#39;t exist</span>
+<span class="sd">            </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; manager = ElasticNetResultsManager.load(&quot;CFPAC_control_g0g1_20251113_142315&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; classifier = manager.load_final_classifier()</span>
+<span class="sd">        &gt;&gt;&gt; # Deploy on new data...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">classifier_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="p">[</span><span class="s1">&#39;models&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="s1">&#39;final_classifier.pkl&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">classifier_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No classifier found at </span><span class="si">{</span><span class="n">classifier_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">classifier_path</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.get_checkpoint_dir">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_checkpoint_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get checkpoint directory path for evaluate_all_feature_sets().</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        checkpoint_dir : str</span>
+<span class="sd">            Path to checkpoints/ subdirectory (as string for compatibility)</span>
+<span class="sd">            </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; results_df = evaluate_all_feature_sets(</span>
+<span class="sd">        ...     adata, y, feature_combos, param_grid,</span>
+<span class="sd">        ...     results_dir=manager.get_checkpoint_dir(),</span>
+<span class="sd">        ...     ...</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirs</span><span class="p">[</span><span class="s1">&#39;checkpoints&#39;</span><span class="p">])</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.add_preprocessing_info">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_preprocessing_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prep_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add preprocessing information to metadata.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        prep_info : dict</span>
+<span class="sd">            Output from prepare_data_for_elastic_net()</span>
+<span class="sd">            Contains cell counts, filter settings, etc.</span>
+<span class="sd">            </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; adata_prep, prep_info = prepare_data_for_elastic_net(...)</span>
+<span class="sd">        &gt;&gt;&gt; manager.add_preprocessing_info(prep_info)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">(</span><span class="n">preprocessing</span><span class="o">=</span><span class="n">prep_info</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.create_summary">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate human-readable analysis summary.</span>
+<span class="sd">        </span>
+<span class="sd">        Creates README.md with:</span>
+<span class="sd">        - Analysis identifier and parameters</span>
+<span class="sd">        - Cell counts and filtering steps</span>
+<span class="sd">        - Selected model details (if available)</span>
+<span class="sd">        - File organization guide</span>
+<span class="sd">        - How to reload results</span>
+<span class="sd">        </span>
+<span class="sd">        Saves to:</span>
+<span class="sd">        ---------</span>
+<span class="sd">        {analysis_dir}/README.md</span>
+<span class="sd">        </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; manager.create_summary()</span>
+<span class="sd">        &gt;&gt;&gt; # Creates comprehensive README for this analysis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">readme_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;README.md&#39;</span>
+        
+        <span class="c1"># Build README content</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;# Elastic Net Analysis: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;## Analysis Information&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;- **Cell Line**: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;- **Condition**: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_info</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- **Additional Info**: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">additional_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+            <span class="sa">f</span><span class="s2">&quot;- **Created**: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;created_at&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;- **Analysis ID**: `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;## Directory Structure&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;```&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;├── metadata.json              # Analysis configuration&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;├── README.md                  # This file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;├── all_models.csv             # All 128 models (Excel-compatible)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;├── all_models.pkl             # All 128 models (Python-compatible)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;├── plots/                     # Diagnostic visualizations&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;├── models/                    # Final trained classifier&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;├── preprocessing/             # GMM histograms&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;└── warnings/                  # Warning logs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;```&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;## Files&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;### Results&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `all_models.csv`: Model evaluation results (all 128 feature sets)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `all_models.pkl`: Same data with Python types preserved&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;### Models&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `models/final_classifier.pkl`: Deployable classifier (model + scaler + threshold)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;### Plots&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `plots/model_selection.png`: Bar chart with 1-SE rule selection&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `plots/coefficient_stability.png`: Coefficient consistency across folds&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `plots/threshold_sweep.png`: MCC optimization curve&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `plots/feature_importance.png`: Final model coefficients&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;### Preprocessing&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `preprocessing/ploidy_gmm_histogram.png`: DNA content GMM labeling&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;- `preprocessing/proliferation_gmm_histogram.png`: pRB/RB ratio GMM labeling&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;## Loading Results&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;```python&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;from elastic_net_modules import ElasticNetResultsManager&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;# Load this analysis&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;manager = ElasticNetResultsManager.load(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;# Access results&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;results_df = manager.load_model_results()&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;classifier = manager.load_final_classifier()&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;metadata = manager.metadata&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;```&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;## Metadata&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Full analysis configuration stored in `metadata.json`&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span>
+        <span class="p">])</span>
+        
+        <span class="c1"># Add preprocessing info if available</span>
+        <span class="k">if</span> <span class="s1">&#39;preprocessing&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                <span class="s2">&quot;### Preprocessing&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&quot;</span>
+            <span class="p">])</span>
+            <span class="n">prep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;n_cells_original&#39;</span> <span class="ow">in</span> <span class="n">prep</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- Original cells: </span><span class="si">{</span><span class="n">prep</span><span class="p">[</span><span class="s1">&#39;n_cells_original&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;n_cells_final&#39;</span> <span class="ow">in</span> <span class="n">prep</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- Final cells: </span><span class="si">{</span><span class="n">prep</span><span class="p">[</span><span class="s1">&#39;n_cells_final&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;filter_2n&#39;</span> <span class="ow">in</span> <span class="n">prep</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- 2N filter: </span><span class="si">{</span><span class="n">prep</span><span class="p">[</span><span class="s1">&#39;filter_2n&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Add model info if available</span>
+        <span class="k">if</span> <span class="s1">&#39;selected_model&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                <span class="s2">&quot;### Selected Model&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;&quot;</span>
+            <span class="p">])</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;selected_model&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;model_name&#39;</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- Model: </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;mean_auroc&#39;</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- AUROC: </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;n_total_features&#39;</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- Features: </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;n_total_features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Write README</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">readme_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span></div>
+
+    
+<div class="viewcode-block" id="ElasticNetResultsManager.load">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">analysis_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;results&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load existing analysis results.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        analysis_id : str</span>
+<span class="sd">            ID of analysis to load (full folder name)</span>
+<span class="sd">        base_dir : str</span>
+<span class="sd">            Base results directory (default: &#39;results&#39;)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        manager : ElasticNetResultsManager</span>
+<span class="sd">            Manager instance with access to all saved results</span>
+<span class="sd">            </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If analysis directory or metadata.json doesn&#39;t exist</span>
+<span class="sd">            </span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; # Load previous analysis</span>
+<span class="sd">        &gt;&gt;&gt; manager = ElasticNetResultsManager.load(</span>
+<span class="sd">        ...     &quot;CFPAC_control_g0g1_20251113_142315&quot;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; results_df = manager.load_model_results()</span>
+<span class="sd">        &gt;&gt;&gt; classifier = manager.load_final_classifier()</span>
+<span class="sd">        &gt;&gt;&gt; print(manager.metadata)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">analysis_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">analysis_id</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">analysis_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analysis directory not found: </span><span class="si">{</span><span class="n">analysis_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">metadata_path</span> <span class="o">=</span> <span class="n">analysis_dir</span> <span class="o">/</span> <span class="s1">&#39;metadata.json&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">metadata_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Metadata file not found: </span><span class="si">{</span><span class="n">metadata_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Load metadata</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        
+        <span class="c1"># Create manager instance</span>
+        <span class="n">manager</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">cell_line</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cell_line&#39;</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">),</span>
+            <span class="n">condition</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="s1">&#39;Unknown&#39;</span><span class="p">),</span>
+            <span class="n">additional_info</span><span class="o">=</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;additional_info&#39;</span><span class="p">),</span>
+            <span class="n">base_dir</span><span class="o">=</span><span class="n">base_dir</span><span class="p">,</span>
+            <span class="n">analysis_id</span><span class="o">=</span><span class="n">analysis_id</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Restore full metadata</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        
+        <span class="k">return</span> <span class="n">manager</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;String representation for debugging.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;ElasticNetResultsManager(</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;  analysis_id=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">analysis_id</span><span class="si">}</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;  cell_line=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_line</span><span class="si">}</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;  condition=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="si">}</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;  additional_info=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">additional_info</span><span class="si">}</span><span class="s2">&#39;,</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;  base_dir=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_dir</span><span class="si">}</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;)&quot;</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Your Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

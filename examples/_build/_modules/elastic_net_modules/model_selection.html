@@ -1,0 +1,1648 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>elastic_net_modules.model_selection &mdash; Elastic Net Analysis - Workflow Documentation 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/workflow.css?v=4ddc2446" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/workflow.js?v=030014fe"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+    }
+});
+</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Elastic Net Analysis - Workflow Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow_index.html">Auto-Discovery Workflow Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#with-custom-options">With Custom Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#configuration-in-conf-py">Configuration in conf.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#live-example">Live Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#discovered-workflow-markers">Discovered Workflow Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Python Module Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.model_selection">Model Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets"><code class="docutils literal notranslate"><span class="pre">evaluate_all_feature_sets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.apply_1se_rule"><code class="docutils literal notranslate"><span class="pre">apply_1se_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_final_classifier"><code class="docutils literal notranslate"><span class="pre">build_final_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_calibrated_classifier"><code class="docutils literal notranslate"><span class="pre">build_calibrated_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.find_optimal_threshold"><code class="docutils literal notranslate"><span class="pre">find_optimal_threshold()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.data_loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor"><code class="docutils literal notranslate"><span class="pre">AdataProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_line"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_info"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.adata"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.adata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_coords_obsm_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_coords_obsm_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_params_uns_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_params_uns_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_labels_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_labels_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_label_colors_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_label_colors_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.__init__"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_random_forest_feature_set"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_random_forest_feature_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phate_coordinates"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phate_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phase_labels"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phase_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.process_all"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.process_all()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.feature_engineering">Feature Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.log_transform_features"><code class="docutils literal notranslate"><span class="pre">log_transform_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations"><code class="docutils literal notranslate"><span class="pre">generate_all_feature_combinations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.logsumexp10"><code class="docutils literal notranslate"><span class="pre">logsumexp10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.compute_composite_features"><code class="docutils literal notranslate"><span class="pre">compute_composite_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary"><code class="docutils literal notranslate"><span class="pre">print_feature_set_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation_gmm"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation_gmm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset"><code class="docutils literal notranslate"><span class="pre">apply_percentile_filter_from_subset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net"><code class="docutils literal notranslate"><span class="pre">prepare_data_for_elastic_net()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.nested_cv">Nested Cross-Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.nested_cv.nested_cv_single_feature_set"><code class="docutils literal notranslate"><span class="pre">nested_cv_single_feature_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.results_manager">Results Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#key-features">Key Features:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#typical-usage-flow">Typical Usage Flow:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#classes">Classes:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#functions">Functions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.generate_analysis_id"><code class="docutils literal notranslate"><span class="pre">generate_analysis_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_preprocessing_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.get_checkpoint_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.add_preprocessing_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.create_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.visualization">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_model_selection"><code class="docutils literal notranslate"><span class="pre">plot_model_selection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_coefficient_stability"><code class="docutils literal notranslate"><span class="pre">plot_coefficient_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_feature_importance"><code class="docutils literal notranslate"><span class="pre">plot_feature_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_threshold_sweep"><code class="docutils literal notranslate"><span class="pre">plot_threshold_sweep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_null_distribution"><code class="docutils literal notranslate"><span class="pre">plot_null_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution"><code class="docutils literal notranslate"><span class="pre">plot_bootstrap_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_performance_summary"><code class="docutils literal notranslate"><span class="pre">plot_performance_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_scatter_kde"><code class="docutils literal notranslate"><span class="pre">plot_scatter_kde()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#nested-cv-analysis">Nested CV Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#feature-set-exploration">Feature Set Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#model-evaluation">Model Evaluation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Elastic Net Analysis - Workflow Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">elastic_net_modules.model_selection</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for elastic_net_modules.model_selection</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Model Selection Module for Elastic Net Analysis</span>
+
+<span class="sd">This module implements model selection functions:</span>
+<span class="sd">1. evaluate_all_feature_sets() - Run nested CV on all 128 feature sets</span>
+<span class="sd">2. apply_1se_rule() - Select simplest model within 1 SE of best</span>
+<span class="sd">3. build_final_classifier() - Train final model on 100% data</span>
+<span class="sd">4. find_optimal_threshold() - Maximize MCC on validation set</span>
+
+<span class="sd"># WORKFLOWS: evaluation_overview, evaluation_detailed, evaluation_full</span>
+
+<span class="sd">Author: AI Assistant</span>
+<span class="sd">Date: November 12, 2025</span>
+<span class="sd">Status: Phase 1.3 Implementation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_predict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">matthews_corrcoef</span><span class="p">,</span> <span class="n">f1_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.nested_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">nested_cv_single_feature_set</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.feature_engineering</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_composite_features</span>
+
+<span class="c1"># Import TYPE_CHECKING to avoid circular imports</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.results_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticNetResultsManager</span>
+
+
+<span class="c1"># DOCUMENT_WORKFLOW: evaluation_overview, evaluation_detailed, evaluation_full</span>
+<div class="viewcode-block" id="evaluate_all_feature_sets">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_all_feature_sets</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">feature_combinations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
+    <span class="n">param_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">,</span>
+    <span class="n">outer_cv_splits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">outer_cv_repeats</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">inner_cv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">resume</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">keep_checkpoints</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">use_composite_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">feature_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate all 128 feature set models using nested CV with parallelization.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Single-cell data object with RAW protein intensities</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        Binary labels (0/1)</span>
+<span class="sd">    feature_combinations : list of dict</span>
+<span class="sd">        Output from generate_all_feature_combinations()</span>
+<span class="sd">        Each dict must have &#39;id&#39; key (0-127) for consistent model identification</span>
+<span class="sd">    param_grid : dict</span>
+<span class="sd">        Hyperparameter grid for Elastic Net</span>
+<span class="sd">        Example: {&#39;C&#39;: [0.1, 1.0, 10.0], &#39;l1_ratio&#39;: [0.1, 0.5, 0.9]}</span>
+<span class="sd">    results_manager : ElasticNetResultsManager</span>
+<span class="sd">        Results manager instance for organizing all outputs.</span>
+<span class="sd">        Automatically handles checkpoints, warnings, and final results saving.</span>
+<span class="sd">        **REQUIRED** - no longer optional for clean, organized results.</span>
+<span class="sd">    outer_cv_splits : int</span>
+<span class="sd">        Number of splits for RepeatedStratifiedKFold outer loop (default 10)</span>
+<span class="sd">    outer_cv_repeats : int</span>
+<span class="sd">        Number of repeats for RepeatedStratifiedKFold outer loop (default 1)</span>
+<span class="sd">    inner_cv : int</span>
+<span class="sd">        Number of inner CV folds for GridSearchCV (default 5)</span>
+<span class="sd">    random_state : int</span>
+<span class="sd">        Random seed for reproducibility</span>
+<span class="sd">    n_jobs : int</span>
+<span class="sd">        Number of parallel jobs for feature set evaluation (-1 = all cores)</span>
+<span class="sd">    verbose : int</span>
+<span class="sd">        Verbosity level:</span>
+<span class="sd">        - 0: Silent (no output)</span>
+<span class="sd">        - 1: Feature set progress bar only (default)</span>
+<span class="sd">        - 2: Feature set + nested fold progress bars</span>
+<span class="sd">    resume : bool</span>
+<span class="sd">        If True, skip feature sets that already have checkpoint files (default True)</span>
+<span class="sd">    keep_checkpoints : bool</span>
+<span class="sd">        If True, keep individual JSON checkpoint files after combining (default False)</span>
+<span class="sd">        If False, remove checkpoints/ directory entirely after successful combination</span>
+<span class="sd">    use_composite_features : bool</span>
+<span class="sd">        Legacy parameter. Ignored if feature_mode is provided.</span>
+<span class="sd">    feature_mode : str, optional</span>
+<span class="sd">        &#39;base&#39;, &#39;mixed&#39;, or &#39;composite&#39;. If None, inferred from use_composite_features.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    results_df : pd.DataFrame</span>
+<span class="sd">        Also automatically saved via results_manager.save_model_results()</span>
+<span class="sd">        Columns:</span>
+<span class="sd">        - model_id: int (0-127, from feature_set_config[&#39;id&#39;])</span>
+<span class="sd">        - model_name: str (e.g., &quot;CycD1_CDK4_p27&quot;)</span>
+<span class="sd">        - features: list of str (proteins in this set)</span>
+<span class="sd">        - n_base_features: int (number of proteins, 0-7)</span>
+<span class="sd">        - n_total_features: int (proteins + 5 composites, varies after NaN removal)</span>
+<span class="sd">        - mean_auroc: float (mean across outer folds)</span>
+<span class="sd">        - se_auroc: float (standard error = SD / sqrt(n_folds))</span>
+<span class="sd">        - sd_auroc: float (standard deviation of fold scores)</span>
+<span class="sd">        - fold_scores: list of float (AUROC for each outer fold)</span>
+<span class="sd">        - best_params: dict (most common hyperparameters across folds)</span>
+<span class="sd">        - timestamp: str (ISO format)</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from elastic_net_modules import ElasticNetResultsManager</span>
+<span class="sd">    &gt;&gt;&gt; manager = ElasticNetResultsManager(</span>
+<span class="sd">    ...     cell_line=&quot;CFPAC&quot;,</span>
+<span class="sd">    ...     condition=&quot;control&quot;,</span>
+<span class="sd">    ...     additional_info=&quot;g0g1&quot;</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; results_df = evaluate_all_feature_sets(</span>
+<span class="sd">    ...     adata, y, feature_combos, param_grid,</span>
+<span class="sd">    ...     results_manager=manager,</span>
+<span class="sd">    ...     n_jobs=-1</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Step 1: Initialize evaluation configuration</span>
+    <span class="c1"># PURPOSE: Set up feature mode and directory paths for model evaluation</span>
+    <span class="c1"># INPUTS: Feature mode preference, Results manager instance</span>
+    <span class="c1"># OUTPUTS: Configured feature_mode, checkpoint and warnings directories</span>
+    
+    <span class="c1"># Backwards compatibility logic</span>
+    <span class="k">if</span> <span class="n">feature_mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feature_mode</span> <span class="o">=</span> <span class="s1">&#39;mixed&#39;</span> <span class="k">if</span> <span class="n">use_composite_features</span> <span class="k">else</span> <span class="s1">&#39;base&#39;</span>
+        
+    <span class="c1"># Get directory paths from manager</span>
+    <span class="n">checkpoints_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_manager</span><span class="o">.</span><span class="n">get_checkpoint_dir</span><span class="p">())</span>
+    <span class="n">warnings_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_manager</span><span class="o">.</span><span class="n">dirs</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analysis ID: </span><span class="si">{</span><span class="n">results_manager</span><span class="o">.</span><span class="n">analysis_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results directory: </span><span class="si">{</span><span class="n">results_manager</span><span class="o">.</span><span class="n">base_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checkpoints: </span><span class="si">{</span><span class="n">checkpoints_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warnings: </span><span class="si">{</span><span class="n">warnings_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feature Mode: </span><span class="si">{</span><span class="n">feature_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 2: Determine which feature sets to process</span>
+    <span class="c1"># PURPOSE: Identify models to evaluate based on existing checkpoints and resume setting</span>
+    <span class="c1"># INPUTS: Feature combinations (128 models), Checkpoint directory, Resume flag</span>
+    <span class="c1"># OUTPUTS: List of feature sets requiring evaluation</span>
+    
+    <span class="n">feature_sets_to_process</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">feature_combinations</span><span class="p">:</span>
+        <span class="n">model_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoints_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;model_</span><span class="si">{</span><span class="n">model_id</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.json&quot;</span>
+        
+        <span class="k">if</span> <span class="n">resume</span> <span class="ow">and</span> <span class="n">checkpoint_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping model </span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2"> (checkpoint exists)&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        
+        <span class="n">feature_sets_to_process</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate counts for progress reporting</span>
+    <span class="n">n_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_combinations</span><span class="p">)</span>
+    <span class="n">n_to_process</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_sets_to_process</span><span class="p">)</span>
+    <span class="n">n_completed</span> <span class="o">=</span> <span class="n">n_total</span> <span class="o">-</span> <span class="n">n_to_process</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Total models: </span><span class="si">{</span><span class="n">n_total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Already completed: </span><span class="si">{</span><span class="n">n_completed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;To process: </span><span class="si">{</span><span class="n">n_to_process</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 3: Evaluate feature sets in parallel</span>
+    <span class="c1"># PURPOSE: Run nested cross-validation for each model using parallel processing</span>
+    <span class="c1"># INPUTS: Feature sets to process, Data (adata, y), Hyperparameter grid, CV settings</span>
+    <span class="c1"># OUTPUTS: Checkpoint files saved for each evaluated model</span>
+    <span class="c1"># CRITICAL: This is the most time-intensive step - uses joblib parallelization</span>
+    <span class="c1"># FUNCTION: _evaluate_single_feature_set</span>
+    
+    <span class="c1"># Process feature sets in parallel</span>
+    <span class="k">if</span> <span class="n">n_to_process</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Nested verbosity for individual nested_cv calls</span>
+        <span class="n">nested_verbose</span> <span class="o">=</span> <span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Show progress bar for feature sets</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">process_with_progress</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">_evaluate_single_feature_set</span><span class="p">(</span>
+                    <span class="n">adata</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span>
+                    <span class="n">checkpoints_dir</span><span class="p">,</span> <span class="n">outer_cv_splits</span><span class="p">,</span> <span class="n">outer_cv_repeats</span><span class="p">,</span>
+                    <span class="n">inner_cv</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">nested_verbose</span><span class="p">,</span> 
+                    <span class="n">feature_mode</span><span class="o">=</span><span class="n">feature_mode</span>
+                <span class="p">)</span>
+            
+            <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">process_with_progress</span><span class="p">)(</span><span class="n">config</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">feature_sets_to_process</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Evaluating feature sets&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Silent or verbose=2 (no outer progress bar)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">_evaluate_single_feature_set</span><span class="p">)(</span>
+                    <span class="n">adata</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span>
+                    <span class="n">checkpoints_dir</span><span class="p">,</span> <span class="n">outer_cv_splits</span><span class="p">,</span> <span class="n">outer_cv_repeats</span><span class="p">,</span>
+                    <span class="n">inner_cv</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">nested_verbose</span><span class="p">,</span> 
+                    <span class="n">feature_mode</span><span class="o">=</span><span class="n">feature_mode</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">feature_sets_to_process</span>
+            <span class="p">)</span>
+    
+    <span class="c1"># Step 4: Load and combine checkpoint results</span>
+    <span class="c1"># PURPOSE: Aggregate all individual model evaluations into unified results</span>
+    <span class="c1"># INPUTS: Checkpoint JSON files from all 128 models</span>
+    <span class="c1"># OUTPUTS: Combined results list, Aggregated warnings list</span>
+    
+    <span class="c1"># Load all checkpoints and combine</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Combining checkpoint files...&quot;</span><span class="p">)</span>
+    
+    <span class="n">all_results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_warnings</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">feature_combinations</span><span class="p">:</span>
+        <span class="n">model_id</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoints_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;model_</span><span class="si">{</span><span class="n">model_id</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.json&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">checkpoint_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Checkpoint for model </span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2"> not found, skipping&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        
+        <span class="n">all_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        
+        <span class="c1"># Extract warnings if present (warnings are stored as strings)</span>
+        <span class="k">if</span> <span class="s1">&#39;warnings&#39;</span> <span class="ow">in</span> <span class="n">result</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">warning_str</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">]:</span>
+                <span class="n">warning_dict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;model_id&#39;</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span>
+                    <span class="s1">&#39;model_name&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;warning&#39;</span><span class="p">:</span> <span class="n">warning_str</span>
+                <span class="p">}</span>
+                <span class="n">all_warnings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">warning_dict</span><span class="p">)</span>
+    
+    <span class="c1"># Step 5: Save consolidated results</span>
+    <span class="c1"># PURPOSE: Store evaluation results in organized directory structure</span>
+    <span class="c1"># INPUTS: Combined results from all models, Warnings from failed evaluations</span>
+    <span class="c1"># OUTPUTS: Results CSV file, Warnings CSV file (if warnings exist)</span>
+    <span class="c1"># FUNCTION: results_manager.save_model_results</span>
+    
+    <span class="c1"># Create results DataFrame</span>
+    <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_results</span><span class="p">)</span>
+    
+    <span class="c1"># Save combined results through manager</span>
+    <span class="n">results_manager</span><span class="o">.</span><span class="n">save_model_results</span><span class="p">(</span><span class="n">results_df</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Combined results saved through results manager&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Save warnings if any</span>
+    <span class="k">if</span> <span class="n">all_warnings</span><span class="p">:</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">warnings_csv</span> <span class="o">=</span> <span class="n">warnings_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;warnings_log_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+        <span class="n">warnings_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_warnings</span><span class="p">)</span>
+        <span class="n">warnings_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">warnings_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warnings saved to: </span><span class="si">{</span><span class="n">warnings_csv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total warnings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_warnings</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 6: Clean up temporary files</span>
+    <span class="c1"># PURPOSE: Remove checkpoint files to conserve disk space</span>
+    <span class="c1"># INPUTS: keep_checkpoints flag, Checkpoints directory</span>
+    <span class="c1"># OUTPUTS: Deleted checkpoint directory (if keep_checkpoints=False)</span>
+    
+    <span class="c1"># Clean up checkpoints if requested</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">keep_checkpoints</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Removing checkpoint files...&quot;</span><span class="p">)</span>
+        
+        <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">checkpoints_dir</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Checkpoints removed&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results_df</span></div>
+
+
+
+<span class="c1"># WORKFLOW_EXCLUDE: evaluation_overview</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_single_feature_set</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">feature_set_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">checkpoints_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">outer_cv_splits</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">outer_cv_repeats</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">inner_cv</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">use_composite_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">feature_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluate a single feature set and save checkpoint.</span>
+<span class="sd">    </span>
+<span class="sd">    This is a helper function called by evaluate_all_feature_sets in parallel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Sub-step 3.1: Configure feature set parameters</span>
+    <span class="c1"># PURPOSE: Extract model identifiers and set feature engineering mode</span>
+    <span class="c1"># INPUTS: Feature set configuration, Feature mode setting</span>
+    <span class="c1"># OUTPUTS: Model ID, Model name, Configured feature_mode</span>
+    
+    <span class="c1"># Backwards compatibility logic</span>
+    <span class="k">if</span> <span class="n">feature_mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feature_mode</span> <span class="o">=</span> <span class="s1">&#39;mixed&#39;</span> <span class="k">if</span> <span class="n">use_composite_features</span> <span class="k">else</span> <span class="s1">&#39;base&#39;</span>
+        
+    <span class="n">model_id</span> <span class="o">=</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="n">model_name</span> <span class="o">=</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Sub-step 3.2: Execute nested cross-validation</span>
+        <span class="c1"># PURPOSE: Evaluate model performance using nested CV with hyperparameter tuning</span>
+        <span class="c1"># INPUTS: Data (adata, y), Feature set config, Hyperparameter grid, CV settings</span>
+        <span class="c1"># OUTPUTS: Cross-validation results with fold scores and best parameters</span>
+        <span class="c1"># FUNCTION: nested_cv_single_feature_set</span>
+        
+        <span class="c1"># Run nested CV</span>
+        <span class="n">cv_results</span> <span class="o">=</span> <span class="n">nested_cv_single_feature_set</span><span class="p">(</span>
+            <span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">feature_set_config</span><span class="o">=</span><span class="n">feature_set_config</span><span class="p">,</span>
+            <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span>
+            <span class="n">outer_cv_splits</span><span class="o">=</span><span class="n">outer_cv_splits</span><span class="p">,</span>
+            <span class="n">outer_cv_repeats</span><span class="o">=</span><span class="n">outer_cv_repeats</span><span class="p">,</span>
+            <span class="n">inner_cv</span><span class="o">=</span><span class="n">inner_cv</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="n">feature_mode</span><span class="o">=</span><span class="n">feature_mode</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Sub-step 3.3: Calculate performance statistics</span>
+        <span class="c1"># PURPOSE: Compute standard error and standard deviation of AUROC across folds</span>
+        <span class="c1"># INPUTS: Fold-level AUROC scores from nested CV</span>
+        <span class="c1"># OUTPUTS: mean_auroc, se_auroc, sd_auroc</span>
+        
+        <span class="c1"># Calculate SE and SD</span>
+        <span class="n">fold_scores</span> <span class="o">=</span> <span class="n">cv_results</span><span class="p">[</span><span class="s1">&#39;fold_scores&#39;</span><span class="p">]</span>
+        <span class="n">mean_auroc</span> <span class="o">=</span> <span class="n">cv_results</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span>
+        <span class="n">n_folds</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fold_scores</span><span class="p">)</span>
+        
+        <span class="c1"># Filter out NaN scores</span>
+        <span class="n">valid_scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">fold_scores</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_scores</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sd_auroc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">valid_scores</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">se_auroc</span> <span class="o">=</span> <span class="n">sd_auroc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">valid_scores</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sd_auroc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">se_auroc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        
+        <span class="c1"># Sub-step 3.4: Package and save results</span>
+        <span class="c1"># PURPOSE: Create structured result dictionary and save checkpoint file</span>
+        <span class="c1"># INPUTS: CV results, Performance statistics, Model metadata</span>
+        <span class="c1"># OUTPUTS: Checkpoint JSON file for this model</span>
+        
+        <span class="c1"># Prepare result</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;model_id&#39;</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span>
+            <span class="s1">&#39;model_name&#39;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+            <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;n_base_features&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;n_total_features&#39;</span><span class="p">:</span> <span class="n">cv_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_features&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+            <span class="s1">&#39;mean_auroc&#39;</span><span class="p">:</span> <span class="n">mean_auroc</span><span class="p">,</span>
+            <span class="s1">&#39;se_auroc&#39;</span><span class="p">:</span> <span class="n">se_auroc</span><span class="p">,</span>
+            <span class="s1">&#39;sd_auroc&#39;</span><span class="p">:</span> <span class="n">sd_auroc</span><span class="p">,</span>
+            <span class="s1">&#39;fold_scores&#39;</span><span class="p">:</span> <span class="n">fold_scores</span><span class="p">,</span>
+            <span class="s1">&#39;fold_best_params&#39;</span><span class="p">:</span> <span class="n">cv_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fold_best_params&#39;</span><span class="p">,</span> <span class="p">[]),</span>
+            <span class="s1">&#39;coefficient_stats&#39;</span><span class="p">:</span> <span class="n">cv_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;coefficient_stats&#39;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Extract warnings if present</span>
+        <span class="k">if</span> <span class="s1">&#39;warnings&#39;</span> <span class="ow">in</span> <span class="n">cv_results</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cv_results</span><span class="p">[</span><span class="s1">&#39;warnings&#39;</span><span class="p">]</span>
+        
+        <span class="c1"># Save checkpoint</span>
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoints_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;model_</span><span class="si">{</span><span class="n">model_id</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.json&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Log error and return failed result</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Error evaluating model </span><span class="si">{</span><span class="n">model_id</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;model_id&#39;</span><span class="p">:</span> <span class="n">model_id</span><span class="p">,</span>
+            <span class="s1">&#39;model_name&#39;</span><span class="p">:</span> <span class="n">model_name</span><span class="p">,</span>
+            <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;n_base_features&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]),</span>
+            <span class="s1">&#39;n_total_features&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="s1">&#39;mean_auroc&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="s1">&#39;se_auroc&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="s1">&#39;sd_auroc&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="s1">&#39;fold_scores&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;fold_best_params&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;coefficient_stats&#39;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">error_msg</span>
+        <span class="p">}</span>
+        
+        <span class="c1"># Save checkpoint even for failed runs</span>
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">checkpoints_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;model_</span><span class="si">{</span><span class="n">model_id</span><span class="si">:</span><span class="s2">03d</span><span class="si">}</span><span class="s2">.json&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+
+
+<div class="viewcode-block" id="apply_1se_rule">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.model_selection.apply_1se_rule">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_1se_rule</span><span class="p">(</span>
+    <span class="n">results_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;mean_auroc&#39;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply the 1-SE rule to select the simplest good model.</span>
+<span class="sd">    </span>
+<span class="sd">    The 1-SE rule selects the simplest model (fewest features) whose performance</span>
+<span class="sd">    is within one standard error of the best model. This balances performance</span>
+<span class="sd">    with interpretability and reduces overfitting risk.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    results_df : pd.DataFrame</span>
+<span class="sd">        Output from evaluate_all_feature_sets()</span>
+<span class="sd">        Must have columns: model_id, model_name, n_total_features, mean_auroc, se_auroc</span>
+<span class="sd">    metric : str</span>
+<span class="sd">        Metric column name to use for selection (default &#39;mean_auroc&#39;)</span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        Print selection details and reasoning (default True)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    selection_results : dict</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;primary_model&#39;: dict (highest AUROC among tied simplest models),</span>
+<span class="sd">            &#39;all_candidates&#39;: list of dict (all models within 1-SE threshold),</span>
+<span class="sd">            &#39;tied_simplest&#39;: list of dict (all models tied for min n_features, if tie exists),</span>
+<span class="sd">            &#39;selection_reason&#39;: str (detailed explanation),</span>
+<span class="sd">            &#39;threshold&#39;: float (mean_auroc_best - se_best),</span>
+<span class="sd">            &#39;best_model&#39;: dict (model with max mean_auroc, for reference)</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Ensure required columns exist</span>
+    <span class="n">required_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">,</span> <span class="s1">&#39;model_name&#39;</span><span class="p">,</span> <span class="s1">&#39;n_total_features&#39;</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="s1">&#39;se_auroc&#39;</span><span class="p">]</span>
+    <span class="n">missing_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_cols</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">results_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing_cols</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required columns: </span><span class="si">{</span><span class="n">missing_cols</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Filter out models with NaN metric values</span>
+    <span class="n">valid_df</span> <span class="o">=</span> <span class="n">results_df</span><span class="p">[</span><span class="o">~</span><span class="n">results_df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No valid models (all have NaN metric values)&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Find best model</span>
+    <span class="n">best_idx</span> <span class="o">=</span> <span class="n">valid_df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">idxmax</span><span class="p">()</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="n">valid_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">best_idx</span><span class="p">]</span>
+    
+    <span class="n">best_auroc</span> <span class="o">=</span> <span class="n">best_model</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
+    <span class="n">best_se</span> <span class="o">=</span> <span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;se_auroc&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># Calculate threshold</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">best_auroc</span> <span class="o">-</span> <span class="n">best_se</span>
+    
+    <span class="c1"># Filter candidates (models within 1-SE)</span>
+    <span class="n">candidates_df</span> <span class="o">=</span> <span class="n">valid_df</span><span class="p">[</span><span class="n">valid_df</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c1"># Find simplest model(s)</span>
+    <span class="n">min_features</span> <span class="o">=</span> <span class="n">candidates_df</span><span class="p">[</span><span class="s1">&#39;n_total_features&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">simplest_df</span> <span class="o">=</span> <span class="n">candidates_df</span><span class="p">[</span><span class="n">candidates_df</span><span class="p">[</span><span class="s1">&#39;n_total_features&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">min_features</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c1"># Sort by metric (descending) to get primary model</span>
+    <span class="n">simplest_df</span> <span class="o">=</span> <span class="n">simplest_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1"># Primary model (highest AUROC among tied simplest)</span>
+    <span class="n">primary_model</span> <span class="o">=</span> <span class="n">simplest_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    
+    <span class="c1"># All tied simplest models</span>
+    <span class="n">tied_simplest</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">simplest_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+    
+    <span class="c1"># All candidates within 1-SE</span>
+    <span class="n">all_candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">candidates_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+    
+    <span class="c1"># Generate selection reason</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tied_simplest</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">selection_reason</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Selected model </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">) &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;from </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tied_simplest</span><span class="p">)</span><span class="si">}</span><span class="s2"> models tied for simplest (</span><span class="si">{</span><span class="n">min_features</span><span class="si">}</span><span class="s2"> features) &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;within 1-SE of best. Primary has highest AUROC: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;se_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">selection_reason</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Selected model </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">) &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;as simplest model (</span><span class="si">{</span><span class="n">min_features</span><span class="si">}</span><span class="s2"> features) within 1-SE of best. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;AUROC: </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;se_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Create result dictionary</span>
+    <span class="n">selection_results</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;primary_model&#39;</span><span class="p">:</span> <span class="n">primary_model</span><span class="p">,</span>
+        <span class="s1">&#39;all_candidates&#39;</span><span class="p">:</span> <span class="n">all_candidates</span><span class="p">,</span>
+        <span class="s1">&#39;tied_simplest&#39;</span><span class="p">:</span> <span class="n">tied_simplest</span><span class="p">,</span>
+        <span class="s1">&#39;selection_reason&#39;</span><span class="p">:</span> <span class="n">selection_reason</span><span class="p">,</span>
+        <span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">,</span>
+        <span class="s1">&#39;best_model&#39;</span><span class="p">:</span> <span class="n">best_model</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="p">}</span>
+    
+    <span class="c1"># Print summary if verbose</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1-SE RULE MODEL SELECTION&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Best Model (max </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ID: </span><span class="si">{</span><span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Name: </span><span class="si">{</span><span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Features: </span><span class="si">{</span><span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;n_total_features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">metric</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">best_auroc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">best_se</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">1-SE Threshold: </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Models within 1-SE: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_candidates</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Simplest Model (min features):&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ID: </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Name: </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Features: </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;n_total_features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">metric</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">primary_model</span><span class="p">[</span><span class="s1">&#39;se_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tied_simplest</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Note: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tied_simplest</span><span class="p">)</span><span class="si">}</span><span class="s2"> models tied for simplest&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Other tied models:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tied_simplest</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. Model </span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">): &quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">model</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Selection Reason:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">selection_reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">selection_results</span></div>
+
+
+
+<div class="viewcode-block" id="build_final_classifier">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.model_selection.build_final_classifier">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_final_classifier</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">feature_set_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">cv_folds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">use_composite_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">feature_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build the final, deployable classifier trained on 100% of data.</span>
+<span class="sd">    </span>
+<span class="sd">    This function performs a complete training workflow:</span>
+<span class="sd">    1. Re-run hyperparameter search on full dataset (no data held out)</span>
+<span class="sd">    2. Train final model with optimal hyperparameters</span>
+<span class="sd">    3. Find optimal classification threshold using out-of-fold predictions</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Single-cell data object with RAW protein intensities</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        Binary labels (0/1)</span>
+<span class="sd">    feature_set_config : dict</span>
+<span class="sd">        Configuration for the selected feature set (from apply_1se_rule)</span>
+<span class="sd">    param_grid : dict</span>
+<span class="sd">        Hyperparameter grid for re-running GridSearchCV</span>
+<span class="sd">    cv_folds : int</span>
+<span class="sd">        Number of CV folds for threshold optimization (default 10)</span>
+<span class="sd">        Uses StratifiedKFold (not Repeated) for out-of-fold predictions</span>
+<span class="sd">    random_state : int</span>
+<span class="sd">        Random seed for reproducibility</span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        Print progress information (default True)</span>
+<span class="sd">    use_composite_features : bool</span>
+<span class="sd">        Legacy parameter. Ignored if feature_mode is provided.</span>
+<span class="sd">    feature_mode : str, optional</span>
+<span class="sd">        &#39;base&#39;, &#39;mixed&#39;, or &#39;composite&#39;. If None, inferred from use_composite_features.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    final_classifier : dict</span>
+<span class="sd">        Complete deployable classifier package</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.nested_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">_prepare_features</span>
+    
+    <span class="c1"># Backwards compatibility logic</span>
+    <span class="k">if</span> <span class="n">feature_mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feature_mode</span> <span class="o">=</span> <span class="s1">&#39;mixed&#39;</span> <span class="k">if</span> <span class="n">use_composite_features</span> <span class="k">else</span> <span class="s1">&#39;base&#39;</span>
+        
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BUILDING FINAL CLASSIFIER&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Feature set: </span><span class="si">{</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base features: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feature mode: </span><span class="si">{</span><span class="n">feature_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 1: Prepare features on 100% of data</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 1: Preparing features on full dataset...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Extract selected proteins</span>
+    <span class="n">protein_list</span> <span class="o">=</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span>
+    <span class="n">protein_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">protein_list</span><span class="p">]</span>
+    <span class="n">X_raw</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">[:,</span> <span class="n">protein_indices</span><span class="p">]</span>
+    
+    <span class="c1"># Prepare features (log + Z-score + composites + clean)</span>
+    <span class="n">X_full_clean</span><span class="p">,</span> <span class="n">feature_names_clean</span><span class="p">,</span> <span class="n">scaler</span><span class="p">,</span> <span class="n">valid_rows</span> <span class="o">=</span> <span class="n">_prepare_features</span><span class="p">(</span>
+        <span class="n">X_raw</span><span class="o">=</span><span class="n">X_raw</span><span class="p">,</span>
+        <span class="n">feature_set_config</span><span class="o">=</span><span class="n">feature_set_config</span><span class="p">,</span>
+        <span class="n">protein_list</span><span class="o">=</span><span class="n">protein_list</span><span class="p">,</span>
+        <span class="n">scaler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Fit new scaler on full data</span>
+        <span class="n">pseudocount</span><span class="o">=</span><span class="mf">1e-100</span><span class="p">,</span>
+        <span class="n">feature_mode</span><span class="o">=</span><span class="n">feature_mode</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Remove samples with NaN</span>
+    <span class="n">y_clean</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">valid_rows</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total features (after NaN removal): </span><span class="si">{</span><span class="n">X_full_clean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total samples (after NaN removal): </span><span class="si">{</span><span class="n">X_full_clean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 2: Find optimal hyperparameters on full dataset</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 2: Finding optimal hyperparameters on full dataset...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create Elastic Net classifier</span>
+    <span class="n">base_clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+        <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;saga&#39;</span><span class="p">,</span>
+        <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Run GridSearchCV</span>
+    <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">estimator</span><span class="o">=</span><span class="n">base_clf</span><span class="p">,</span>
+        <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+    
+    <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_full_clean</span><span class="p">,</span> <span class="n">y_clean</span><span class="p">)</span>
+    <span class="n">best_params</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Best hyperparameters: </span><span class="si">{</span><span class="n">best_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Best CV AUROC: </span><span class="si">{</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 3: Train final model with best hyperparameters</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 3: Training final model on 100</span><span class="si">% o</span><span class="s2">f data...&quot;</span><span class="p">)</span>
+    
+    <span class="n">final_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+        <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;saga&#39;</span><span class="p">,</span>
+        <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">best_params</span>
+    <span class="p">)</span>
+    
+    <span class="n">final_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_full_clean</span><span class="p">,</span> <span class="n">y_clean</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Model trained successfully&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 4: Find optimal threshold using out-of-fold predictions</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 4: Finding optimal threshold using </span><span class="si">{</span><span class="n">cv_folds</span><span class="si">}</span><span class="s2">-fold CV...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create new model for cross-validation</span>
+    <span class="n">cv_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+        <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;saga&#39;</span><span class="p">,</span>
+        <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">best_params</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Generate out-of-fold predictions</span>
+    <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">cv_folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="n">y_pred_proba</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+        <span class="n">cv_model</span><span class="p">,</span> <span class="n">X_full_clean</span><span class="p">,</span> <span class="n">y_clean</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;predict_proba&#39;</span>
+    <span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1"># Find optimal threshold</span>
+    <span class="n">threshold_results</span> <span class="o">=</span> <span class="n">find_optimal_threshold</span><span class="p">(</span>
+        <span class="n">y_true</span><span class="o">=</span><span class="n">y_clean</span><span class="p">,</span>
+        <span class="n">y_pred_proba</span><span class="o">=</span><span class="n">y_pred_proba</span><span class="p">,</span>
+        <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;mcc&#39;</span><span class="p">,</span>
+        <span class="n">threshold_step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+    <span class="p">)</span>
+    
+    <span class="n">optimal_threshold</span> <span class="o">=</span> <span class="n">threshold_results</span><span class="p">[</span><span class="s1">&#39;optimal_threshold&#39;</span><span class="p">]</span>
+    <span class="n">mcc_at_threshold</span> <span class="o">=</span> <span class="n">threshold_results</span><span class="p">[</span><span class="s1">&#39;max_metric_value&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># Step 5: Package everything</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 5: Packaging final classifier...&quot;</span><span class="p">)</span>
+    
+    <span class="n">final_classifier</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">final_model</span><span class="p">,</span>
+        <span class="s1">&#39;scaler&#39;</span><span class="p">:</span> <span class="n">scaler</span><span class="p">,</span>
+        <span class="s1">&#39;feature_names&#39;</span><span class="p">:</span> <span class="n">feature_names_clean</span><span class="p">,</span>
+        <span class="s1">&#39;feature_set_config&#39;</span><span class="p">:</span> <span class="n">feature_set_config</span><span class="p">,</span>
+        <span class="s1">&#39;best_hyperparams&#39;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">,</span>
+        <span class="s1">&#39;optimal_threshold&#39;</span><span class="p">:</span> <span class="n">optimal_threshold</span><span class="p">,</span>
+        <span class="s1">&#39;mcc_at_threshold&#39;</span><span class="p">:</span> <span class="n">mcc_at_threshold</span><span class="p">,</span>
+        <span class="s1">&#39;threshold_curve&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;thresholds&#39;</span><span class="p">:</span> <span class="n">threshold_results</span><span class="p">[</span><span class="s1">&#39;all_thresholds&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;mcc_values&#39;</span><span class="p">:</span> <span class="n">threshold_results</span><span class="p">[</span><span class="s1">&#39;all_metric_values&#39;</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;cv_predictions&#39;</span><span class="p">:</span> <span class="n">y_pred_proba</span><span class="p">,</span>
+        <span class="s1">&#39;cv_labels&#39;</span><span class="p">:</span> <span class="n">y_clean</span><span class="p">,</span>
+        <span class="s1">&#39;cv_folds&#39;</span><span class="p">:</span> <span class="n">cv_folds</span><span class="p">,</span>
+        <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FINAL CLASSIFIER SUMMARY&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feature set: </span><span class="si">{</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total features: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_names_clean</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hyperparameters: </span><span class="si">{</span><span class="n">best_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Optimal threshold: </span><span class="si">{</span><span class="n">optimal_threshold</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MCC at threshold: </span><span class="si">{</span><span class="n">mcc_at_threshold</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">final_classifier</span></div>
+
+
+
+<div class="viewcode-block" id="build_calibrated_classifier">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.model_selection.build_calibrated_classifier">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_calibrated_classifier</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">feature_set_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">cv_folds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">use_composite_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">feature_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build calibrated classifier with isotonic regression and valid OOF predictions.</span>
+<span class="sd">    </span>
+<span class="sd">    This function implements a 4-step workflow for building calibrated models:</span>
+<span class="sd">    1. Grid Search with scoring=&#39;roc_auc&#39; to find best hyperparameters</span>
+<span class="sd">    2. Create CalibratedClassifierCV with isotonic method</span>
+<span class="sd">    3. Generate out-of-fold predictions using cross_val_predict (for valid Brier scores)</span>
+<span class="sd">    4. Fit final calibrated model on all data</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Single-cell data object with RAW protein intensities</span>
+<span class="sd">    y : np.ndarray</span>
+<span class="sd">        Binary labels (0/1)</span>
+<span class="sd">    feature_set_config : dict</span>
+<span class="sd">        Configuration for the selected feature set</span>
+<span class="sd">    param_grid : dict</span>
+<span class="sd">        Hyperparameter grid for GridSearchCV (e.g., {&#39;C&#39;: [...], &#39;l1_ratio&#39;: [...]})</span>
+<span class="sd">    cv_folds : int</span>
+<span class="sd">        Number of CV folds for calibration and OOF predictions (default 5)</span>
+<span class="sd">    random_state : int</span>
+<span class="sd">        Random seed for reproducibility</span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        Print progress information (default True)</span>
+<span class="sd">    use_composite_features : bool</span>
+<span class="sd">        Legacy parameter. Ignored if feature_mode is provided.</span>
+<span class="sd">    feature_mode : str, optional</span>
+<span class="sd">        &#39;base&#39;, &#39;mixed&#39;, or &#39;composite&#39;. If None, inferred from use_composite_features.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    calibrated_classifier : dict</span>
+<span class="sd">        Complete deployable classifier package with:</span>
+<span class="sd">        - &#39;model&#39;: Fitted CalibratedClassifierCV</span>
+<span class="sd">        - &#39;scaler&#39;: Fitted StandardScaler</span>
+<span class="sd">        - &#39;oof_probs&#39;: Out-of-fold probabilities (for valid Brier calculation)</span>
+<span class="sd">        - &#39;valid_rows&#39;: Boolean mask of valid samples (after NaN removal)</span>
+<span class="sd">        - &#39;feature_names&#39;: List of feature names</span>
+<span class="sd">        - &#39;best_params&#39;: Best hyperparameters from grid search</span>
+<span class="sd">        - &#39;is_calibrated&#39;: True flag</span>
+<span class="sd">        - Other metadata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.nested_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">_prepare_features</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.calibration</span><span class="w"> </span><span class="kn">import</span> <span class="n">CalibratedClassifierCV</span>
+    
+    <span class="c1"># Backwards compatibility logic</span>
+    <span class="k">if</span> <span class="n">feature_mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feature_mode</span> <span class="o">=</span> <span class="s1">&#39;mixed&#39;</span> <span class="k">if</span> <span class="n">use_composite_features</span> <span class="k">else</span> <span class="s1">&#39;base&#39;</span>
+        
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BUILDING CALIBRATED CLASSIFIER&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Feature set: </span><span class="si">{</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base features: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feature mode: </span><span class="si">{</span><span class="n">feature_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calibration method: Isotonic regression&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 1: Prepare features on 100% of data</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 1: Preparing features on full dataset...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Extract selected proteins</span>
+    <span class="n">protein_list</span> <span class="o">=</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span>
+    <span class="n">protein_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">protein_list</span><span class="p">]</span>
+    <span class="n">X_raw</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">[:,</span> <span class="n">protein_indices</span><span class="p">]</span>
+    
+    <span class="c1"># Prepare features (log + Z-score + composites + clean)</span>
+    <span class="n">X_full_clean</span><span class="p">,</span> <span class="n">feature_names_clean</span><span class="p">,</span> <span class="n">scaler</span><span class="p">,</span> <span class="n">valid_rows</span> <span class="o">=</span> <span class="n">_prepare_features</span><span class="p">(</span>
+        <span class="n">X_raw</span><span class="o">=</span><span class="n">X_raw</span><span class="p">,</span>
+        <span class="n">feature_set_config</span><span class="o">=</span><span class="n">feature_set_config</span><span class="p">,</span>
+        <span class="n">protein_list</span><span class="o">=</span><span class="n">protein_list</span><span class="p">,</span>
+        <span class="n">scaler</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Fit new scaler on full data</span>
+        <span class="n">pseudocount</span><span class="o">=</span><span class="mf">1e-100</span><span class="p">,</span>
+        <span class="n">feature_mode</span><span class="o">=</span><span class="n">feature_mode</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Remove samples with NaN</span>
+    <span class="n">y_clean</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">valid_rows</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total features (after NaN removal): </span><span class="si">{</span><span class="n">X_full_clean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total samples (after NaN removal): </span><span class="si">{</span><span class="n">X_full_clean</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 2: Find optimal hyperparameters on full dataset</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 2: Finding optimal hyperparameters via GridSearchCV...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create Elastic Net classifier</span>
+    <span class="n">base_clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+        <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;saga&#39;</span><span class="p">,</span>
+        <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Run GridSearchCV</span>
+    <span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+        <span class="n">estimator</span><span class="o">=</span><span class="n">base_clf</span><span class="p">,</span>
+        <span class="n">param_grid</span><span class="o">=</span><span class="n">param_grid</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;roc_auc&#39;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+    
+    <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_full_clean</span><span class="p">,</span> <span class="n">y_clean</span><span class="p">)</span>
+    <span class="n">best_params</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">best_params_</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Best hyperparameters: </span><span class="si">{</span><span class="n">best_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Best CV AUROC: </span><span class="si">{</span><span class="n">grid_search</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 3: Create optimized model for calibration</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 3: Creating calibrated classifier...&quot;</span><span class="p">)</span>
+    
+    <span class="n">optimized_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+        <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;saga&#39;</span><span class="p">,</span>
+        <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">best_params</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Create calibrated classifier</span>
+    <span class="n">calibrated_clf</span> <span class="o">=</span> <span class="n">CalibratedClassifierCV</span><span class="p">(</span>
+        <span class="n">estimator</span><span class="o">=</span><span class="n">optimized_model</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;isotonic&#39;</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="n">cv_folds</span>
+    <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Calibration method: isotonic&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  CV folds: </span><span class="si">{</span><span class="n">cv_folds</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 4: Get out-of-fold predictions BEFORE fitting</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 4: Generating out-of-fold predictions (for valid Brier scores)...&quot;</span><span class="p">)</span>
+    
+    <span class="n">oof_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+        <span class="n">calibrated_clf</span><span class="p">,</span>
+        <span class="n">X_full_clean</span><span class="p">,</span>
+        <span class="n">y_clean</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">cv_folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">),</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;predict_proba&#39;</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">oof_probs</span><span class="p">)</span><span class="si">}</span><span class="s2"> OOF probability predictions&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 5: Fit final calibrated model on all data</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 5: Fitting final calibrated model on full dataset...&quot;</span><span class="p">)</span>
+    
+    <span class="n">calibrated_clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_full_clean</span><span class="p">,</span> <span class="n">y_clean</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Calibrated model trained successfully&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Step 6: Package everything</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Step 6: Packaging calibrated classifier...&quot;</span><span class="p">)</span>
+    
+    <span class="n">calibrated_classifier</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">calibrated_clf</span><span class="p">,</span>
+        <span class="s1">&#39;scaler&#39;</span><span class="p">:</span> <span class="n">scaler</span><span class="p">,</span>
+        <span class="s1">&#39;oof_probs&#39;</span><span class="p">:</span> <span class="n">oof_probs</span><span class="p">,</span>
+        <span class="s1">&#39;valid_rows&#39;</span><span class="p">:</span> <span class="n">valid_rows</span><span class="p">,</span>
+        <span class="s1">&#39;feature_names&#39;</span><span class="p">:</span> <span class="n">feature_names_clean</span><span class="p">,</span>
+        <span class="s1">&#39;feature_set_config&#39;</span><span class="p">:</span> <span class="n">feature_set_config</span><span class="p">,</span>
+        <span class="s1">&#39;best_params&#39;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">,</span>
+        <span class="s1">&#39;is_calibrated&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;calibration_method&#39;</span><span class="p">:</span> <span class="s1">&#39;isotonic&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;cv_folds&#39;</span><span class="p">:</span> <span class="n">cv_folds</span><span class="p">,</span>
+        <span class="s1">&#39;cv_labels&#39;</span><span class="p">:</span> <span class="n">y_clean</span><span class="p">,</span>
+        <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CALIBRATED CLASSIFIER SUMMARY&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feature set: </span><span class="si">{</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total features: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_names_clean</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hyperparameters: </span><span class="si">{</span><span class="n">best_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calibration: Isotonic regression (cv=</span><span class="si">{</span><span class="n">cv_folds</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OOF predictions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">oof_probs</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">calibrated_classifier</span></div>
+
+
+
+<div class="viewcode-block" id="find_optimal_threshold">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.model_selection.find_optimal_threshold">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_optimal_threshold</span><span class="p">(</span>
+    <span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">y_pred_proba</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;mcc&#39;</span><span class="p">,</span>
+    <span class="n">threshold_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find optimal classification threshold by linear sweep to maximize metric.</span>
+<span class="sd">    </span>
+<span class="sd">    Sweeps through threshold values from threshold_step to (1 - threshold_step)</span>
+<span class="sd">    and selects the threshold that maximizes the specified metric.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_true : np.ndarray, shape (n_samples,)</span>
+<span class="sd">        True binary labels (0/1)</span>
+<span class="sd">    y_pred_proba : np.ndarray, shape (n_samples,)</span>
+<span class="sd">        Predicted probabilities from classifier (values in [0, 1])</span>
+<span class="sd">    metric : str</span>
+<span class="sd">        Metric to optimize (default &#39;mcc&#39;)</span>
+<span class="sd">        Options: &#39;mcc&#39; (Matthews Correlation Coefficient), &#39;f1&#39; (F1 score)</span>
+<span class="sd">    threshold_step : float</span>
+<span class="sd">        Resolution for threshold sweep (default 0.01)</span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        Print optimal threshold and metric value (default True)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    results : dict</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;optimal_threshold&#39;: float,</span>
+<span class="sd">            &#39;max_metric_value&#39;: float,</span>
+<span class="sd">            &#39;all_thresholds&#39;: np.ndarray,</span>
+<span class="sd">            &#39;all_metric_values&#39;: np.ndarray,</span>
+<span class="sd">            &#39;metric_name&#39;: str</span>
+<span class="sd">        }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate thresholds to test</span>
+    <span class="n">thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">threshold_step</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">threshold_step</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate metric for each threshold</span>
+    <span class="n">metric_values</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">:</span>
+        <span class="c1"># Convert probabilities to binary predictions</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_pred_proba</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        
+        <span class="c1"># Calculate metric</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s1">&#39;mcc&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">matthews_corrcoef</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s1">&#39;f1&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown metric: </span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">. Use &#39;mcc&#39; or &#39;f1&#39;&quot;</span><span class="p">)</span>
+        
+        <span class="n">metric_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    
+    <span class="n">metric_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metric_values</span><span class="p">)</span>
+    
+    <span class="c1"># Find optimal threshold</span>
+    <span class="n">max_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">metric_values</span><span class="p">)</span>
+    <span class="n">optimal_threshold</span> <span class="o">=</span> <span class="n">thresholds</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]</span>
+    <span class="n">max_metric_value</span> <span class="o">=</span> <span class="n">metric_values</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]</span>
+    
+    <span class="c1"># Print results if verbose</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Optimal threshold: </span><span class="si">{</span><span class="n">optimal_threshold</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">metric</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> at threshold: </span><span class="si">{</span><span class="n">max_metric_value</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;optimal_threshold&#39;</span><span class="p">:</span> <span class="n">optimal_threshold</span><span class="p">,</span>
+        <span class="s1">&#39;max_metric_value&#39;</span><span class="p">:</span> <span class="n">max_metric_value</span><span class="p">,</span>
+        <span class="s1">&#39;all_thresholds&#39;</span><span class="p">:</span> <span class="n">thresholds</span><span class="p">,</span>
+        <span class="s1">&#39;all_metric_values&#39;</span><span class="p">:</span> <span class="n">metric_values</span><span class="p">,</span>
+        <span class="s1">&#39;metric_name&#39;</span><span class="p">:</span> <span class="n">metric</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">results</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Your Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

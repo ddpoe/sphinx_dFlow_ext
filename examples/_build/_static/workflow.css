@@ -1,0 +1,902 @@
+/**
+ * Workflow Documentation Styling
+ * 
+ * Custom styles for workflow protocol documentation
+ */
+
+/* ============================================================================
+   Fix Mermaid Container Positioning Issues
+   ============================================================================ */
+
+/* Ensure mermaid containers don't break layout */
+.mermaid-container {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 20px 0;
+    z-index: 1 !important;
+}
+
+/* Prevent fullscreen modal from blocking content when not active */
+.mermaid-fullscreen-modal {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: fixed !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: auto !important;
+}
+
+/* Mermaid diagrams should not overlay content */
+pre.mermaid {
+    position: relative !important;
+    z-index: 1 !important;
+    display: block !important;
+    overflow: auto;
+    max-height: 600px;
+}
+
+/* ============================================================================
+   Page Layout - Center content at 70% width
+   ============================================================================ */
+
+/* Main document container - use full width */
+div.document {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Main body content area - expanded to 70% */
+div.body {
+    max-width: 70% !important;
+    min-width: 500px;
+    margin: 0 auto;
+    padding: 20px 40px;
+}
+
+/* Alabaster theme specific - body wrapper takes remaining space */
+div.bodywrapper {
+    margin-left: 200px !important; /* Reduced from default to push content left */
+    margin-right: 0 !important; /* Remove right margin */
+    width: calc(100% - 200px) !important;
+}
+
+/* Document wrapper - no extra padding on right */
+div.documentwrapper {
+    width: 100% !important;
+    float: none !important;
+}
+
+/* Sphinx sidebar styling - narrower and more to the left */
+div.sphinxsidebar {
+    width: 180px !important;
+    max-width: 180px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* ============================================================================
+   Workflow Container
+   ============================================================================ */
+
+.workflow-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+/* ============================================================================
+   Workflow Navigation
+   ============================================================================ */
+
+.workflow-navigation {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    /* Removed sticky positioning to prevent blocking issues */
+    position: relative;
+    z-index: 1;
+}
+
+.workflow-navigation h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.2em;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.workflow-navigation ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.workflow-navigation li {
+    margin: 8px 0;
+}
+
+.workflow-navigation a {
+    color: #3498db;
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.workflow-navigation a:hover {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding-left: 15px;
+}
+
+
+/* ============================================================================
+   Workflow Steps
+   ============================================================================ */
+
+.workflow-step {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #3498db;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+.workflow-step.hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-left-color: #2980b9;
+}
+
+.workflow-step.highlighted {
+    animation: highlight-pulse 1s ease-in-out;
+    border-left-color: #f39c12;
+}
+
+@keyframes highlight-pulse {
+    0%, 100% {
+        background: white;
+    }
+    50% {
+        background: #fff3cd;
+    }
+}
+
+
+/* ============================================================================
+   Step Headers
+   ============================================================================ */
+
+.workflow-step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    user-select: none;
+}
+
+.workflow-step-header h2,
+.workflow-step-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.collapse-indicator {
+    color: #3498db;
+    font-size: 0.8em;
+    transition: transform 0.2s;
+    display: inline-block;
+}
+
+.workflow-step-content.collapsed {
+    display: none;
+}
+
+
+/* ============================================================================
+   Step Metadata
+   ============================================================================ */
+
+.workflow-step-meta {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.workflow-step-meta dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+}
+
+.workflow-step-meta dt {
+    font-weight: 600;
+    color: #495057;
+}
+
+.workflow-step-meta dd {
+    margin: 0;
+    color: #6c757d;
+}
+
+
+/* ============================================================================
+   Purpose and Descriptions
+   ============================================================================ */
+
+.workflow-purpose {
+    font-style: italic;
+    color: #5a6268;
+    margin: 10px 0;
+    padding-left: 15px;
+    border-left: 3px solid #6c757d;
+}
+
+
+/* ============================================================================
+   Function Signatures
+   ============================================================================ */
+
+.workflow-function {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 12px 0;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.workflow-function code {
+    background: transparent;
+    padding: 0;
+    color: #c7254e;
+}
+
+
+/* ============================================================================
+   Inputs and Outputs
+   ============================================================================ */
+
+.workflow-io {
+    margin: 15px 0;
+}
+
+.workflow-io-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+.workflow-inputs {
+    color: #28a745;
+}
+
+.workflow-outputs {
+    color: #007bff;
+}
+
+.workflow-io-list {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.workflow-io-list li::before {
+    content: "→ ";
+    color: #6c757d;
+}
+
+
+/* ============================================================================
+   Critical Warnings
+   ============================================================================ */
+
+.workflow-critical {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-left: 4px solid #ff9800;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.workflow-critical::before {
+    content: "⚠️ ";
+    font-size: 1.2em;
+}
+
+.workflow-critical strong {
+    color: #856404;
+}
+
+
+/* ============================================================================
+   Sub-steps
+   ============================================================================ */
+
+.workflow-substeps {
+    margin-left: 30px;
+    margin-top: 15px;
+    padding-left: 20px;
+    border-left: 2px solid #dee2e6;
+}
+
+.workflow-substep {
+    margin-bottom: 15px;
+    padding-left: 15px;
+}
+
+.workflow-substep-number {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+
+/* ============================================================================
+   Collapsible Sections (dropdown directive)
+   ============================================================================ */
+
+details.workflow-substeps {
+    margin: 15px 0;
+}
+
+details.workflow-substeps summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #3498db;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    user-select: none;
+}
+
+details.workflow-substeps summary:hover {
+    background: #e9ecef;
+}
+
+details.workflow-substeps[open] summary {
+    margin-bottom: 15px;
+}
+
+
+/* ============================================================================
+   Quick Reference Table
+   ============================================================================ */
+
+.workflow-quick-reference {
+    margin: 20px 0;
+}
+
+.workflow-quick-reference table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.workflow-quick-reference th {
+    background: #3498db;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.workflow-quick-reference td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.workflow-quick-reference tr:hover {
+    background: #f8f9fa;
+}
+
+
+/* ============================================================================
+   Mermaid Diagrams
+   ============================================================================ */
+
+.workflow-diagram {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.workflow-diagram .mermaid {
+    display: flex;
+    justify-content: center;
+}
+
+
+/* ============================================================================
+   Function Hierarchy
+   ============================================================================ */
+
+.workflow-function-hierarchy {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 3px solid #dee2e6;
+}
+
+.workflow-function-section {
+    margin-bottom: 30px;
+}
+
+.workflow-function-name {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    color: #c7254e;
+    background: #f9f2f4;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+
+/* ============================================================================
+   Code Blocks
+   ============================================================================ */
+
+pre {
+    position: relative;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    overflow-x: auto;
+}
+
+.copy-code-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 6px 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: all 0.2s;
+}
+
+.copy-code-button:hover {
+    background: #2980b9;
+}
+
+.copy-code-button.copied {
+    background: #27ae60;
+}
+
+
+/* ============================================================================
+   Workflow Step References (inline)
+   ============================================================================ */
+
+.workflow-step-ref {
+    color: #3498db;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: all 0.2s;
+}
+
+.workflow-step-ref:hover {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+
+/* ============================================================================
+   Output Artifacts
+   ============================================================================ */
+
+.workflow-outputs-section {
+    margin-top: 30px;
+}
+
+.workflow-output-item {
+    background: #f8f9fa;
+    border-left: 4px solid #27ae60;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 6px;
+}
+
+.workflow-output-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+
+/* ============================================================================
+   Common Issues
+   ============================================================================ */
+
+.workflow-issues-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff5f5;
+    border-radius: 8px;
+}
+
+.workflow-issue {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: white;
+    border-left: 4px solid #e74c3c;
+    border-radius: 6px;
+}
+
+.workflow-issue-title {
+    font-weight: 600;
+    color: #c0392b;
+    margin-bottom: 10px;
+}
+
+.workflow-issue-solution {
+    margin-top: 10px;
+    padding: 10px;
+    background: #d4edda;
+    border-left: 3px solid #28a745;
+    border-radius: 4px;
+}
+
+
+/* ============================================================================
+   Responsive Design
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .workflow-navigation {
+        position: static;
+        margin-bottom: 20px;
+    }
+    
+    .workflow-step {
+        padding: 15px;
+    }
+    
+    .workflow-substeps {
+        margin-left: 15px;
+        padding-left: 10px;
+    }
+    
+    .workflow-quick-reference table {
+        font-size: 0.9em;
+    }
+}
+
+
+/* ============================================================================
+   Hierarchical Step Numbering and Indentation
+   ============================================================================ */
+
+/* Workflow step containers */
+.workflow-step {
+    margin-bottom: 1.5em;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Depth-based styling */
+.workflow-step-depth-0 {
+    border-left: 4px solid #3498db;
+    margin-left: 0;
+}
+
+.workflow-step-depth-1 {
+    border-left: 3px solid #95a5a6;
+    margin-left: 2em;
+    background: #f8f9fa;
+}
+
+.workflow-step-depth-2 {
+    border-left: 2px solid #bdc3c7;
+    margin-left: 4em;
+    background: #fafbfc;
+}
+
+.workflow-step-depth-3 {
+    border-left: 1px solid #d5d8dc;
+    margin-left: 6em;
+    background: #fcfcfd;
+}
+
+/* Step titles (rubric elements) */
+.workflow-step-title {
+    font-size: 1.3em !important;
+    font-weight: 600 !important;
+    color: #2c3e50 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0.8em !important;
+    padding-bottom: 0.5em;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.workflow-step-depth-1 .workflow-step-title {
+    font-size: 1.15em !important;
+    color: #34495e !important;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.workflow-step-depth-2 .workflow-step-title {
+    font-size: 1.05em !important;
+    color: #566573 !important;
+    border-bottom: 1px dotted #d0d0d0;
+}
+
+.workflow-step-depth-3 .workflow-step-title {
+    font-size: 0.95em !important;
+    color: #6c757d !important;
+    border-bottom: none;
+}
+
+/* Make rubric elements look like headers */
+p.rubric.workflow-step-title {
+    display: block;
+}
+
+/* TOC-like navigation in sidebar */
+.sphinxsidebarwrapper nav > ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sphinxsidebarwrapper nav > ul ul {
+    margin-left: 1.2em;
+    padding-left: 10px;
+    border-left: 2px solid #ecf0f1;
+}
+
+.sphinxsidebarwrapper nav li {
+    margin: 0.3em 0;
+}
+
+.sphinxsidebarwrapper nav a {
+    color: #3498db;
+    text-decoration: none;
+    padding: 0.2em 0.5em;
+    display: inline-block;
+    border-radius: 3px;
+    transition: all 0.2s;
+}
+
+.sphinxsidebarwrapper nav a:hover {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding-left: 0.8em;
+}
+
+
+/* ============================================================================
+   Local TOC (Steps Navigation)
+   ============================================================================ */
+
+/* Style the local table of contents for workflow steps */
+.contents.local.topic {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-left: 4px solid #3498db;
+    border-radius: 8px;
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.contents.local.topic > p.topic-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+.contents.local.topic ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.contents.local.topic li {
+    margin: 8px 0;
+    padding-left: 0;
+}
+
+.contents.local.topic a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 12px;
+    display: block;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: white;
+    border: 1px solid transparent;
+}
+
+.contents.local.topic a:hover {
+    background: #e3f2fd;
+    color: #1565c0;
+    border-color: #90caf9;
+    transform: translateX(5px);
+}
+
+.contents.local.topic a::before {
+    content: "→ ";
+    color: #95a5a6;
+    margin-right: 5px;
+}
+
+
+/* ============================================================================
+   Workflow Step Navigation Box
+   ============================================================================ */
+
+.admonition.workflow-step-nav {
+    background: linear-gradient(135deg, #e8f4fd 0%, #d4e8f8 100%);
+    border: 1px solid #90caf9;
+    border-left: 4px solid #2196f3;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+}
+
+.admonition.workflow-step-nav > .admonition-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #1565c0;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #90caf9;
+}
+
+.admonition.workflow-step-nav ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admonition.workflow-step-nav li {
+    margin: 0;
+}
+
+.admonition.workflow-step-nav a {
+    display: inline-block;
+    background: white;
+    color: #1976d2;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    border: 1px solid #90caf9;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.admonition.workflow-step-nav a:hover {
+    background: #1976d2;
+    color: white;
+    border-color: #1976d2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+
+/* ============================================================================
+   Source Link Styling
+   ============================================================================ */
+
+/* Source link inline styling */
+a.source-link,
+a.viewcode-link {
+    font-size: 0.85em;
+    margin-left: 8px;
+    color: #666;
+    text-decoration: none;
+    font-weight: normal;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    transition: all 0.2s ease;
+}
+
+a.source-link:hover,
+a.viewcode-link:hover {
+    background: #e0e0e0;
+    color: #333;
+    border-color: #ccc;
+    text-decoration: none;
+}
+
+/* Source link in step titles */
+.workflow-step-title a.source-link {
+    font-size: 0.7em;
+    vertical-align: middle;
+}
+
+/* Highlight targeted step in source view */
+.step-anchor:target,
+.step-anchor:target + .line,
+.step-line:target {
+    background: #ffffcc !important;
+    border-left: 3px solid #f0ad4e;
+    margin-left: -3px;
+}
+
+/* Line-level highlight on source pages */
+.source .line:target {
+    background: #ffffcc !important;
+}
+
+/* Source link line styling */
+a.source-line-link {
+    font-size: 0.8em;
+    color: #888;
+    font-family: monospace;
+}
+
+a.source-line-link:hover {
+    color: #0366d6;
+}
+
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+
+@media print {
+    .workflow-navigation {
+        display: none;
+    }
+    
+    .contents.local.topic {
+        display: none;
+    }
+    
+    .workflow-step {
+        page-break-inside: avoid;
+    }
+    
+    .copy-code-button {
+        display: none;
+    }
+    
+    .workflow-step-content.collapsed {
+        display: block !important;
+    }
+    
+    section > section[id*="step-"] {
+        border-left: 2px solid #000;
+    }
+}

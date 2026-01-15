@@ -1,0 +1,1514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>elastic_net_modules.preprocessing &mdash; Elastic Net Analysis - Workflow Documentation 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/workflow.css?v=4ddc2446" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/workflow.js?v=030014fe"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+    }
+});
+</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Elastic Net Analysis - Workflow Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow_index.html">Auto-Discovery Workflow Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#with-custom-options">With Custom Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#configuration-in-conf-py">Configuration in conf.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#live-example">Live Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#discovered-workflow-markers">Discovered Workflow Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Python Module Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.model_selection">Model Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets"><code class="docutils literal notranslate"><span class="pre">evaluate_all_feature_sets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.apply_1se_rule"><code class="docutils literal notranslate"><span class="pre">apply_1se_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_final_classifier"><code class="docutils literal notranslate"><span class="pre">build_final_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_calibrated_classifier"><code class="docutils literal notranslate"><span class="pre">build_calibrated_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.find_optimal_threshold"><code class="docutils literal notranslate"><span class="pre">find_optimal_threshold()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.data_loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor"><code class="docutils literal notranslate"><span class="pre">AdataProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_line"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_info"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.adata"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.adata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_coords_obsm_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_coords_obsm_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_params_uns_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_params_uns_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_labels_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_labels_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_label_colors_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_label_colors_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.__init__"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_random_forest_feature_set"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_random_forest_feature_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phate_coordinates"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phate_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phase_labels"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phase_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.process_all"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.process_all()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.feature_engineering">Feature Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.log_transform_features"><code class="docutils literal notranslate"><span class="pre">log_transform_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations"><code class="docutils literal notranslate"><span class="pre">generate_all_feature_combinations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.logsumexp10"><code class="docutils literal notranslate"><span class="pre">logsumexp10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.compute_composite_features"><code class="docutils literal notranslate"><span class="pre">compute_composite_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary"><code class="docutils literal notranslate"><span class="pre">print_feature_set_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation_gmm"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation_gmm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset"><code class="docutils literal notranslate"><span class="pre">apply_percentile_filter_from_subset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net"><code class="docutils literal notranslate"><span class="pre">prepare_data_for_elastic_net()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.nested_cv">Nested Cross-Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.nested_cv.nested_cv_single_feature_set"><code class="docutils literal notranslate"><span class="pre">nested_cv_single_feature_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.results_manager">Results Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#key-features">Key Features:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#typical-usage-flow">Typical Usage Flow:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#classes">Classes:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#functions">Functions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.generate_analysis_id"><code class="docutils literal notranslate"><span class="pre">generate_analysis_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_preprocessing_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.get_checkpoint_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.add_preprocessing_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.create_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.visualization">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_model_selection"><code class="docutils literal notranslate"><span class="pre">plot_model_selection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_coefficient_stability"><code class="docutils literal notranslate"><span class="pre">plot_coefficient_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_feature_importance"><code class="docutils literal notranslate"><span class="pre">plot_feature_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_threshold_sweep"><code class="docutils literal notranslate"><span class="pre">plot_threshold_sweep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_null_distribution"><code class="docutils literal notranslate"><span class="pre">plot_null_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution"><code class="docutils literal notranslate"><span class="pre">plot_bootstrap_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_performance_summary"><code class="docutils literal notranslate"><span class="pre">plot_performance_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_scatter_kde"><code class="docutils literal notranslate"><span class="pre">plot_scatter_kde()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#nested-cv-analysis">Nested CV Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#feature-set-exploration">Feature Set Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#model-evaluation">Model Evaluation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Elastic Net Analysis - Workflow Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">elastic_net_modules.preprocessing</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for elastic_net_modules.preprocessing</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Preprocessing Module for Elastic Net Analysis</span>
+
+<span class="sd">This module handles all data preparation steps before Elastic Net modeling:</span>
+<span class="sd">1. DNA content labeling (manual threshold or GMM: 2N vs not_2N)</span>
+<span class="sd">2. Proliferation labeling (manual threshold or GMM: prolif vs nonprolif)</span>
+<span class="sd">3. Optional percentile-based filtering (e.g., Fra1 low cells)</span>
+<span class="sd">4. Ploidy filtering (optional 2N selection)</span>
+<span class="sd">5. Feature extraction</span>
+
+<span class="sd">Author: Stallaert Lab</span>
+<span class="sd">Date: November 13, 2025</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="c1"># Import cc-mapping thresholding module</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cc_mapping.thresholding</span><span class="w"> </span><span class="kn">import</span> <span class="n">GMMThresholding</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.results_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticNetResultsManager</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_apply_manual_threshold_labeling</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">feature</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">ordered_labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">label_obs_save_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cell_line</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">save_histogram</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">plot_title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply manual threshold labeling using cc-mapping.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Input data</span>
+<span class="sd">    feature : str</span>
+<span class="sd">        Feature name to threshold</span>
+<span class="sd">    threshold : float</span>
+<span class="sd">        Threshold value (values &lt; threshold get first label, &gt;= get second label)</span>
+<span class="sd">    ordered_labels : list of str</span>
+<span class="sd">        Labels for each bin (e.g., [&#39;2N&#39;, &#39;not_2N&#39;])</span>
+<span class="sd">    label_obs_save_str : str</span>
+<span class="sd">        Column name to save labels in adata.obs</span>
+<span class="sd">    cell_line : str, optional</span>
+<span class="sd">        Cell line name for plot title</span>
+<span class="sd">    output_dir : Path, optional</span>
+<span class="sd">        Directory to save plots</span>
+<span class="sd">    save_histogram : bool</span>
+<span class="sd">        Whether to save histogram</span>
+<span class="sd">    results_manager : ElasticNetResultsManager, optional</span>
+<span class="sd">        Results manager for saving plots</span>
+<span class="sd">    plot_title : str, optional</span>
+<span class="sd">        Custom plot title</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Updated adata with new label column</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Manual Threshold Labeling: </span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Threshold: </span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Labels: </span><span class="si">{</span><span class="n">ordered_labels</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Initialize GMMThresholding object (for plotting and labeling utilities)</span>
+    <span class="n">gmm_obj</span> <span class="o">=</span> <span class="n">GMMThresholding</span><span class="p">(</span>
+        <span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span>
+        <span class="n">feature</span><span class="o">=</span><span class="n">feature</span><span class="p">,</span>
+        <span class="n">label_obs_save_str</span><span class="o">=</span><span class="n">label_obs_save_str</span><span class="p">,</span>
+        <span class="n">thresholding_events_key</span><span class="o">=</span><span class="s1">&#39;manual_thresholding_events&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Apply manual threshold directly (no fit() needed!)</span>
+    <span class="n">gmm_obj</span><span class="o">.</span><span class="n">categorize_samples</span><span class="p">(</span>
+        <span class="n">manual_thresholds</span><span class="o">=</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span>
+        <span class="n">ordered_labels</span><span class="o">=</span><span class="n">ordered_labels</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Get updated adata</span>
+    <span class="n">adata</span> <span class="o">=</span> <span class="n">gmm_obj</span><span class="o">.</span><span class="n">return_adata</span><span class="p">()</span>
+    
+    <span class="c1"># Create numeric labels for backward compatibility</span>
+    <span class="c1"># Assuming first label is 0, second is 1</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_obs_save_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_str&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_obs_save_str</span><span class="p">]</span> <span class="o">==</span> <span class="n">ordered_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    
+    <span class="c1"># Print summary</span>
+    <span class="n">label_counts</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_obs_save_str</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Total cells: </span><span class="si">{</span><span class="n">total</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">label_counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">count</span><span class="o">/</span><span class="n">total</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Save histogram</span>
+    <span class="k">if</span> <span class="n">save_histogram</span> <span class="ow">and</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plot_title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plot_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Manual Threshold - </span><span class="si">{</span><span class="n">cell_line</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">cell_line</span> <span class="k">else</span> <span class="s1">&#39;Manual Threshold&#39;</span>
+        
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">gmm_obj</span><span class="o">.</span><span class="n">plot_hist_distribution_with_boundaries</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">plot_title</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Save using manager if available, else save to output_dir</span>
+        <span class="c1"># Use consistent naming: ploidy/proliferation + manual/gmm</span>
+        <span class="k">if</span> <span class="s1">&#39;ploidy&#39;</span> <span class="ow">in</span> <span class="n">label_obs_save_str</span><span class="p">:</span>
+            <span class="n">plot_filename</span> <span class="o">=</span> <span class="s1">&#39;ploidy_manual_histogram&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;prolif&#39;</span> <span class="ow">in</span> <span class="n">label_obs_save_str</span><span class="p">:</span>
+            <span class="n">plot_filename</span> <span class="o">=</span> <span class="s1">&#39;proliferation_manual_histogram&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plot_filename</span> <span class="o">=</span> <span class="n">label_obs_save_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_label_str&#39;</span><span class="p">,</span> <span class="s1">&#39;_manual_histogram&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">results_manager</span><span class="o">.</span><span class="n">save_preprocessing_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">plot_filename</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved histogram via results_manager&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">save_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">plot_filename</span><span class="si">}</span><span class="s1">.png&#39;</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved histogram: </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">adata</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_apply_gmm_threshold_labeling</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">feature</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n_components</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">ordered_labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">label_obs_save_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">gmm_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cell_line</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">save_histogram</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">plot_title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply GMM-based threshold labeling using cc-mapping.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Input data</span>
+<span class="sd">    feature : str</span>
+<span class="sd">        Feature name to threshold</span>
+<span class="sd">    n_components : int</span>
+<span class="sd">        Number of GMM components</span>
+<span class="sd">    ordered_labels : list of str</span>
+<span class="sd">        Labels for each component (low to high)</span>
+<span class="sd">    label_obs_save_str : str</span>
+<span class="sd">        Column name to save labels in adata.obs</span>
+<span class="sd">    gmm_kwargs : dict, optional</span>
+<span class="sd">        Keyword arguments for GaussianMixture</span>
+<span class="sd">    cell_line : str, optional</span>
+<span class="sd">        Cell line name for plot title</span>
+<span class="sd">    output_dir : Path, optional</span>
+<span class="sd">        Directory to save plots</span>
+<span class="sd">    save_histogram : bool</span>
+<span class="sd">        Whether to save histogram</span>
+<span class="sd">    results_manager : ElasticNetResultsManager, optional</span>
+<span class="sd">        Results manager for saving plots</span>
+<span class="sd">    plot_title : str, optional</span>
+<span class="sd">        Custom plot title</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Updated adata with new label column</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GMM Labeling: </span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GMM components: </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ordered labels: </span><span class="si">{</span><span class="n">ordered_labels</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Set default GMM kwargs</span>
+    <span class="k">if</span> <span class="n">gmm_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gmm_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;init_params&#39;</span><span class="p">:</span> <span class="s1">&#39;k-means++&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;n_init&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s1">&#39;max_iter&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">42</span>
+        <span class="p">}</span>
+    
+    <span class="c1"># Initialize GMM thresholding</span>
+    <span class="n">gmm_obj</span> <span class="o">=</span> <span class="n">GMMThresholding</span><span class="p">(</span>
+        <span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span>
+        <span class="n">feature</span><span class="o">=</span><span class="n">feature</span><span class="p">,</span>
+        <span class="n">label_obs_save_str</span><span class="o">=</span><span class="n">label_obs_save_str</span><span class="p">,</span>
+        <span class="n">thresholding_events_key</span><span class="o">=</span><span class="s1">&#39;gmm_thresholding_events&#39;</span><span class="p">,</span>
+        <span class="n">gmm_kwargs</span><span class="o">=</span><span class="n">gmm_kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Fit GMM</span>
+    <span class="n">gmm_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">)</span>
+    
+    <span class="c1"># Categorize samples</span>
+    <span class="n">gmm_obj</span><span class="o">.</span><span class="n">categorize_samples</span><span class="p">(</span>
+        <span class="n">ordered_labels</span><span class="o">=</span><span class="n">ordered_labels</span><span class="p">,</span>
+        <span class="n">duplicate_labels</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Allow collapsing multiple components</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Get updated adata</span>
+    <span class="n">adata</span> <span class="o">=</span> <span class="n">gmm_obj</span><span class="o">.</span><span class="n">return_adata</span><span class="p">()</span>
+    
+    <span class="c1"># Create numeric labels for backward compatibility</span>
+    <span class="c1"># Get unique labels to determine mapping</span>
+    <span class="n">unique_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">ordered_labels</span><span class="p">))</span>
+    <span class="c1"># Assuming last unique label is &quot;positive&quot; class (1)</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_obs_save_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_str&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_obs_save_str</span><span class="p">]</span> <span class="o">==</span> <span class="n">unique_labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    
+    <span class="c1"># Print summary</span>
+    <span class="n">label_counts</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_obs_save_str</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Total cells: </span><span class="si">{</span><span class="n">total</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">label_counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">count</span><span class="o">/</span><span class="n">total</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Save histogram</span>
+    <span class="k">if</span> <span class="n">save_histogram</span> <span class="ow">and</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plot_title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plot_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;GMM - </span><span class="si">{</span><span class="n">cell_line</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">cell_line</span> <span class="k">else</span> <span class="s1">&#39;GMM&#39;</span>
+        
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">gmm_obj</span><span class="o">.</span><span class="n">plot_hist_distribution_with_boundaries</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">plot_title</span><span class="p">,</span>
+            <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Save using manager if available, else save to output_dir</span>
+        <span class="c1"># Use consistent naming: ploidy/proliferation + manual/gmm</span>
+        <span class="k">if</span> <span class="s1">&#39;ploidy&#39;</span> <span class="ow">in</span> <span class="n">label_obs_save_str</span><span class="p">:</span>
+            <span class="n">plot_filename</span> <span class="o">=</span> <span class="s1">&#39;ploidy_gmm_histogram&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;prolif&#39;</span> <span class="ow">in</span> <span class="n">label_obs_save_str</span><span class="p">:</span>
+            <span class="n">plot_filename</span> <span class="o">=</span> <span class="s1">&#39;proliferation_gmm_histogram&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plot_filename</span> <span class="o">=</span> <span class="n">label_obs_save_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_label_str&#39;</span><span class="p">,</span> <span class="s1">&#39;_gmm_histogram&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">results_manager</span><span class="o">.</span><span class="n">save_preprocessing_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">plot_filename</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved histogram via results_manager&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">save_path</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">plot_filename</span><span class="si">}</span><span class="s1">.png&#39;</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved histogram: </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">adata</span>
+
+
+<div class="viewcode-block" id="label_ploidy_and_proliferation">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">label_ploidy_and_proliferation</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">dna_feature</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;norm_Int_Intg_DNA_nuc&#39;</span><span class="p">,</span>
+    <span class="n">prolif_marker</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Int_Med_pRB_nuc&#39;</span><span class="p">,</span> <span class="s1">&#39;Int_Med_RB_nuc&#39;</span><span class="p">),</span>
+    <span class="n">ploidy_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">prolif_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">gmm_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cell_line</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">save_histograms</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Label ALL cells for ploidy and proliferation status.</span>
+<span class="sd">    </span>
+<span class="sd">    Supports both manual thresholds and GMM-based labeling using cc-mapping.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Single-cell data object with raw measurements</span>
+<span class="sd">    dna_feature : str</span>
+<span class="sd">        Feature name for DNA content</span>
+<span class="sd">    prolif_marker : tuple of str</span>
+<span class="sd">        (numerator, denominator) for proliferation ratio</span>
+<span class="sd">    ploidy_config : dict or None</span>
+<span class="sd">        Configuration for ploidy labeling:</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;enabled&#39;: bool (default True),</span>
+<span class="sd">            &#39;use_manual&#39;: bool (default False),</span>
+<span class="sd">            &#39;manual_threshold&#39;: float (if use_manual=True),</span>
+<span class="sd">            &#39;manual_labels&#39;: list (if use_manual=True),</span>
+<span class="sd">            &#39;n_components&#39;: int (if use_manual=False),</span>
+<span class="sd">            &#39;ordered_labels&#39;: list (if use_manual=False),</span>
+<span class="sd">            &#39;save_histogram&#39;: bool (default True)</span>
+<span class="sd">        }</span>
+<span class="sd">    prolif_config : dict or None</span>
+<span class="sd">        Configuration for proliferation labeling:</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;use_manual&#39;: bool (default False),</span>
+<span class="sd">            &#39;manual_threshold&#39;: float (if use_manual=True),</span>
+<span class="sd">            &#39;manual_labels&#39;: list (if use_manual=True),</span>
+<span class="sd">            &#39;n_components&#39;: int (if use_manual=False),</span>
+<span class="sd">            &#39;ordered_labels&#39;: list (if use_manual=False),</span>
+<span class="sd">            &#39;save_histogram&#39;: bool (default True)</span>
+<span class="sd">        }</span>
+<span class="sd">    gmm_kwargs : dict or None</span>
+<span class="sd">        Keyword arguments for GaussianMixture (only used for GMM mode)</span>
+<span class="sd">    output_dir : Path or None</span>
+<span class="sd">        Directory to save histograms</span>
+<span class="sd">    cell_line : str or None</span>
+<span class="sd">        Cell line name for plot titles</span>
+<span class="sd">    save_histograms : bool</span>
+<span class="sd">        Master switch for saving histograms</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided, saves histograms through manager</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Input adata with new columns in .obs:</span>
+<span class="sd">        - &#39;ploidy_label&#39;: int (0=not_2N, 1=2N)</span>
+<span class="sd">        - &#39;ploidy_label_str&#39;: str (&#39;not_2N&#39;, &#39;2N&#39;)</span>
+<span class="sd">        - &#39;prolif_label&#39;: int (0=nonprolif, 1=prolif)</span>
+<span class="sd">        - &#39;prolif_label_str&#39;: str (&#39;nonprolif&#39;, &#39;prolif&#39;)</span>
+<span class="sd">        - &#39;prolif_marker_log&#39;: float (log10 pRB/RB ratio)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set defaults</span>
+    <span class="k">if</span> <span class="n">ploidy_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ploidy_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;enabled&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;use_manual&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;n_components&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s1">&#39;ordered_labels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2N&#39;</span><span class="p">,</span> <span class="s1">&#39;not_2N&#39;</span><span class="p">,</span> <span class="s1">&#39;not_2N&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;save_histogram&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">prolif_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prolif_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;use_manual&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;n_components&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s1">&#39;ordered_labels&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;nonprolif&#39;</span><span class="p">,</span> <span class="s1">&#39;prolif&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;save_histogram&#39;</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="p">}</span>
+    
+    <span class="c1"># Set default GMM kwargs if not provided</span>
+    <span class="k">if</span> <span class="n">gmm_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">gmm_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;init_params&#39;</span><span class="p">:</span> <span class="s1">&#39;k-means++&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;n_init&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="s1">&#39;max_iter&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">42</span>
+        <span class="p">}</span>
+    
+    <span class="c1"># Determine output directory</span>
+    <span class="k">if</span> <span class="n">save_histograms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">results_manager</span><span class="o">.</span><span class="n">dirs</span><span class="p">[</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+            <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Step 1: Ploidy Labeling (Manual or GMM)</span>
+    <span class="c1"># ========================================================================</span>
+    <span class="k">if</span> <span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">use_manual</span> <span class="o">=</span> <span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_manual&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">use_manual</span><span class="p">:</span>
+            <span class="c1"># Manual threshold mode</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;manual_threshold&#39;</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;manual_labels&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;2N&#39;</span><span class="p">,</span> <span class="s1">&#39;not_2N&#39;</span><span class="p">])</span>
+            
+            <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ploidy_config[&#39;manual_threshold&#39;] must be provided when use_manual=True&quot;</span><span class="p">)</span>
+            
+            <span class="n">adata</span> <span class="o">=</span> <span class="n">_apply_manual_threshold_labeling</span><span class="p">(</span>
+                <span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span>
+                <span class="n">feature</span><span class="o">=</span><span class="n">dna_feature</span><span class="p">,</span>
+                <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+                <span class="n">ordered_labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+                <span class="n">label_obs_save_str</span><span class="o">=</span><span class="s1">&#39;ploidy_label_str&#39;</span><span class="p">,</span>
+                <span class="n">cell_line</span><span class="o">=</span><span class="n">cell_line</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">save_histogram</span><span class="o">=</span><span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;save_histogram&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">save_histograms</span><span class="p">,</span>
+                <span class="n">results_manager</span><span class="o">=</span><span class="n">results_manager</span><span class="p">,</span>
+                <span class="n">plot_title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;DNA Content (Manual) - </span><span class="si">{</span><span class="n">cell_line</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">cell_line</span> <span class="k">else</span> <span class="s1">&#39;DNA Content (Manual)&#39;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># GMM mode</span>
+            <span class="n">n_components</span> <span class="o">=</span> <span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_components&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+            <span class="n">ordered_labels</span> <span class="o">=</span> <span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ordered_labels&#39;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">ordered_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;ploidy_config[&#39;ordered_labels&#39;] must be provided for GMM mode. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Example for </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2"> components: [&#39;2N&#39;, &#39;not_2N&#39;, &#39;not_2N&#39;]&quot;</span>
+                <span class="p">)</span>
+            
+            <span class="n">adata</span> <span class="o">=</span> <span class="n">_apply_gmm_threshold_labeling</span><span class="p">(</span>
+                <span class="n">adata</span><span class="o">=</span><span class="n">adata</span><span class="p">,</span>
+                <span class="n">feature</span><span class="o">=</span><span class="n">dna_feature</span><span class="p">,</span>
+                <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
+                <span class="n">ordered_labels</span><span class="o">=</span><span class="n">ordered_labels</span><span class="p">,</span>
+                <span class="n">label_obs_save_str</span><span class="o">=</span><span class="s1">&#39;ploidy_label_str&#39;</span><span class="p">,</span>
+                <span class="n">gmm_kwargs</span><span class="o">=</span><span class="n">gmm_kwargs</span><span class="p">,</span>
+                <span class="n">cell_line</span><span class="o">=</span><span class="n">cell_line</span><span class="p">,</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">save_histogram</span><span class="o">=</span><span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;save_histogram&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">save_histograms</span><span class="p">,</span>
+                <span class="n">results_manager</span><span class="o">=</span><span class="n">results_manager</span><span class="p">,</span>
+                <span class="n">plot_title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;DNA Content GMM - </span><span class="si">{</span><span class="n">cell_line</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">cell_line</span> <span class="k">else</span> <span class="s1">&#39;DNA Content GMM&#39;</span>
+            <span class="p">)</span>
+    
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Step 2: Proliferation Labeling (Manual or GMM)</span>
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Calculate proliferation ratio: pRB/RB</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs_vector</span><span class="p">(</span><span class="n">prolif_marker</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs_vector</span><span class="p">(</span><span class="n">prolif_marker</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Add small epsilon only to denominator to avoid division by zero</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">/</span> <span class="p">(</span><span class="n">denominator</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)</span>
+    <span class="c1"># Data should already be filtered; minimal pseudocount for safety</span>
+    <span class="n">prolif_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ratio</span> <span class="o">+</span> <span class="mf">1e-100</span><span class="p">)</span>
+    
+    <span class="c1"># Add to obs for reference</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_marker_log&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prolif_log</span>
+    
+    <span class="n">use_manual</span> <span class="o">=</span> <span class="n">prolif_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_manual&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">use_manual</span><span class="p">:</span>
+        <span class="c1"># Manual threshold mode</span>
+        <span class="c1"># Create temporary AnnData with just the composite feature</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+        <span class="n">temp_feature_name</span> <span class="o">=</span> <span class="s1">&#39;prolif_ratio_temp&#39;</span>
+        <span class="n">adata_temp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">prolif_log</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">obs</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">adata_temp</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">temp_feature_name</span><span class="p">]</span>
+        
+        <span class="n">threshold</span> <span class="o">=</span> <span class="n">prolif_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;manual_threshold&#39;</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">prolif_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;manual_labels&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;nonprolif&#39;</span><span class="p">,</span> <span class="s1">&#39;prolif&#39;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;prolif_config[&#39;manual_threshold&#39;] must be provided when use_manual=True&quot;</span><span class="p">)</span>
+        
+        <span class="n">adata_temp</span> <span class="o">=</span> <span class="n">_apply_manual_threshold_labeling</span><span class="p">(</span>
+            <span class="n">adata</span><span class="o">=</span><span class="n">adata_temp</span><span class="p">,</span>
+            <span class="n">feature</span><span class="o">=</span><span class="n">temp_feature_name</span><span class="p">,</span>
+            <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="n">ordered_labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">label_obs_save_str</span><span class="o">=</span><span class="s1">&#39;prolif_label_str&#39;</span><span class="p">,</span>
+            <span class="n">cell_line</span><span class="o">=</span><span class="n">cell_line</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+            <span class="n">save_histogram</span><span class="o">=</span><span class="n">prolif_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;save_histogram&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">save_histograms</span><span class="p">,</span>
+            <span class="n">results_manager</span><span class="o">=</span><span class="n">results_manager</span><span class="p">,</span>
+            <span class="n">plot_title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Proliferation (Manual) - </span><span class="si">{</span><span class="n">cell_line</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">cell_line</span> <span class="k">else</span> <span class="s1">&#39;Proliferation (Manual)&#39;</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Copy labels back to original adata</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label_str&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_temp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label_str&#39;</span><span class="p">]</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_temp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label&#39;</span><span class="p">]</span>
+        
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># GMM mode</span>
+        <span class="c1"># Create temporary AnnData with just the composite feature</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+        <span class="n">temp_feature_name</span> <span class="o">=</span> <span class="s1">&#39;prolif_ratio_temp&#39;</span>
+        <span class="n">adata_temp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">prolif_log</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">obs</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">adata_temp</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">temp_feature_name</span><span class="p">]</span>
+        
+        <span class="n">n_components</span> <span class="o">=</span> <span class="n">prolif_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_components&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">ordered_labels</span> <span class="o">=</span> <span class="n">prolif_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ordered_labels&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">ordered_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;prolif_config[&#39;ordered_labels&#39;] must be provided for GMM mode. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Example for </span><span class="si">{</span><span class="n">n_components</span><span class="si">}</span><span class="s2"> components: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;2-comp: [&#39;nonprolif&#39;, &#39;prolif&#39;], &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;3-comp: [&#39;nonprolif&#39;, &#39;nonprolif&#39;, &#39;prolif&#39;]&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="n">adata_temp</span> <span class="o">=</span> <span class="n">_apply_gmm_threshold_labeling</span><span class="p">(</span>
+            <span class="n">adata</span><span class="o">=</span><span class="n">adata_temp</span><span class="p">,</span>
+            <span class="n">feature</span><span class="o">=</span><span class="n">temp_feature_name</span><span class="p">,</span>
+            <span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span>
+            <span class="n">ordered_labels</span><span class="o">=</span><span class="n">ordered_labels</span><span class="p">,</span>
+            <span class="n">label_obs_save_str</span><span class="o">=</span><span class="s1">&#39;prolif_label_str&#39;</span><span class="p">,</span>
+            <span class="n">gmm_kwargs</span><span class="o">=</span><span class="n">gmm_kwargs</span><span class="p">,</span>
+            <span class="n">cell_line</span><span class="o">=</span><span class="n">cell_line</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+            <span class="n">save_histogram</span><span class="o">=</span><span class="n">prolif_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;save_histogram&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">save_histograms</span><span class="p">,</span>
+            <span class="n">results_manager</span><span class="o">=</span><span class="n">results_manager</span><span class="p">,</span>
+            <span class="n">plot_title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Proliferation GMM - </span><span class="si">{</span><span class="n">cell_line</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="n">cell_line</span> <span class="k">else</span> <span class="s1">&#39;Proliferation GMM&#39;</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Copy labels back to original adata</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label_str&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_temp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label_str&#39;</span><span class="p">]</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata_temp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label&#39;</span><span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Labeling Complete!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Added columns to adata.obs:&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ploidy_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - ploidy_label, ploidy_label_str&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - prolif_label, prolif_label_str, prolif_marker_log&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⚠️  Please review histograms before proceeding to prepare_data_for_elastic_net()&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">adata</span></div>
+
+
+
+<span class="c1"># Keep old function name for backwards compatibility</span>
+<span class="n">label_ploidy_and_proliferation_gmm</span> <span class="o">=</span> <span class="n">label_ploidy_and_proliferation</span>
+
+
+<div class="viewcode-block" id="apply_percentile_filter_from_subset">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_percentile_filter_from_subset</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">feature</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">percentile</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;lt&#39;</span><span class="p">,</span>
+    <span class="n">reference_subset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span>
+    <span class="n">subset_label_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">subset_label_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filter cells based on percentile threshold calculated from a reference subset.</span>
+<span class="sd">    </span>
+<span class="sd">    This implements the Fra1-filtering logic:</span>
+<span class="sd">    1. Calculate threshold from a chosen subset (e.g., nonprolif cells)</span>
+<span class="sd">    2. Apply threshold to ALL cells</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Data to filter</span>
+<span class="sd">    feature : str</span>
+<span class="sd">        Feature name to filter on (e.g., &#39;Int_Med_Fra1_nuc&#39;)</span>
+<span class="sd">    percentile : float</span>
+<span class="sd">        Percentile value (0-100)</span>
+<span class="sd">    operator : str</span>
+<span class="sd">        Comparison operator: &#39;lt&#39;, &#39;le&#39;, &#39;gt&#39;, &#39;ge&#39;, &#39;eq&#39;, &#39;ne&#39;</span>
+<span class="sd">        Default: &#39;lt&#39; (less than, for &quot;keep low Fra1 cells&quot;)</span>
+<span class="sd">    reference_subset : str</span>
+<span class="sd">        Which cells to use for calculating threshold:</span>
+<span class="sd">        - &#39;all&#39;: All cells</span>
+<span class="sd">        - &#39;nonprolif&#39;: Nonprolif cells only</span>
+<span class="sd">        - &#39;prolif&#39;: Prolif cells only</span>
+<span class="sd">        - &#39;2N&#39;: 2N cells only</span>
+<span class="sd">        Note: If filter_2n=True was applied first, these are implicitly 2N cells</span>
+<span class="sd">    subset_label_key : str or None</span>
+<span class="sd">        Column in adata.obs with labels (e.g., &#39;prolif_label&#39;)</span>
+<span class="sd">        Required if reference_subset is &#39;nonprolif&#39; or &#39;prolif&#39;</span>
+<span class="sd">    subset_label_value : int or None</span>
+<span class="sd">        Value in subset_label_key for the reference subset</span>
+<span class="sd">        - 0 for nonprolif</span>
+<span class="sd">        - 1 for prolif</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    adata_filtered : AnnData</span>
+<span class="sd">        Filtered cells</span>
+<span class="sd">    threshold : float</span>
+<span class="sd">        The threshold value used</span>
+<span class="sd">    filter_info : dict</span>
+<span class="sd">        Metadata about filtering:</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;feature&#39;: str,</span>
+<span class="sd">            &#39;percentile&#39;: float,</span>
+<span class="sd">            &#39;threshold&#39;: float,</span>
+<span class="sd">            &#39;operator&#39;: str,</span>
+<span class="sd">            &#39;reference_subset&#39;: str,</span>
+<span class="sd">            &#39;n_reference_cells&#39;: int,</span>
+<span class="sd">            &#39;n_cells_before&#39;: int,</span>
+<span class="sd">            &#39;n_cells_after&#39;: int,</span>
+<span class="sd">            &#39;n_cells_removed&#39;: int,</span>
+<span class="sd">            &#39;fraction_removed&#39;: float</span>
+<span class="sd">        }</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Keep cells with Fra1 &lt; P90 of nonprolif cells</span>
+<span class="sd">    &gt;&gt;&gt; adata_filt, thresh, info = apply_percentile_filter_from_subset(</span>
+<span class="sd">    ...     adata,</span>
+<span class="sd">    ...     feature=&#39;Int_Med_Fra1_nuc&#39;,</span>
+<span class="sd">    ...     percentile=90,</span>
+<span class="sd">    ...     operator=&#39;lt&#39;,</span>
+<span class="sd">    ...     reference_subset=&#39;nonprolif&#39;,</span>
+<span class="sd">    ...     subset_label_key=&#39;prolif_label&#39;,</span>
+<span class="sd">    ...     subset_label_value=0</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applying Percentile Filter from Subset&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Select reference subset for threshold calculation</span>
+    <span class="k">if</span> <span class="n">reference_subset</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">reference_cells</span> <span class="o">=</span> <span class="n">adata</span>
+    <span class="k">elif</span> <span class="n">reference_subset</span> <span class="o">==</span> <span class="s1">&#39;nonprolif&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">subset_label_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">subset_label_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide subset_label_key and subset_label_value for &#39;nonprolif&#39; subset&quot;</span><span class="p">)</span>
+        <span class="n">reference_cells</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">subset_label_key</span><span class="p">]</span> <span class="o">==</span> <span class="n">subset_label_value</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">reference_subset</span> <span class="o">==</span> <span class="s1">&#39;prolif&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">subset_label_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">subset_label_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide subset_label_key and subset_label_value for &#39;prolif&#39; subset&quot;</span><span class="p">)</span>
+        <span class="n">reference_cells</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">subset_label_key</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Assuming 1 = prolif</span>
+    <span class="k">elif</span> <span class="n">reference_subset</span> <span class="o">==</span> <span class="s1">&#39;2N&#39;</span><span class="p">:</span>
+        <span class="n">reference_cells</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;ploidy_label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown reference_subset: </span><span class="si">{</span><span class="n">reference_subset</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate threshold from reference subset using obs_vector</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">reference_cells</span><span class="o">.</span><span class="n">obs_vector</span><span class="p">(</span><span class="n">feature</span><span class="p">),</span> <span class="n">percentile</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Feature: </span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reference subset: </span><span class="si">{</span><span class="n">reference_subset</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">reference_cells</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> cells)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Percentile: P</span><span class="si">{</span><span class="n">percentile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Threshold: </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Operator: </span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Apply filter to ALL cells using obs_vector</span>
+    <span class="n">operators</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;lt&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">,</span>
+        <span class="s1">&#39;le&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">threshold</span><span class="p">,</span>
+        <span class="s1">&#39;gt&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">,</span>
+        <span class="s1">&#39;ge&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">,</span>
+        <span class="s1">&#39;eq&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">threshold</span><span class="p">,</span>
+        <span class="s1">&#39;ne&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">threshold</span><span class="p">,</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">operator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">operators</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown operator: </span><span class="si">{</span><span class="n">operator</span><span class="si">}</span><span class="s2">. Use: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">operators</span><span class="p">[</span><span class="n">operator</span><span class="p">](</span><span class="n">adata</span><span class="o">.</span><span class="n">obs_vector</span><span class="p">(</span><span class="n">feature</span><span class="p">))</span>
+    <span class="n">adata_filtered</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c1"># Prepare filter info</span>
+    <span class="n">filter_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="n">feature</span><span class="p">,</span>
+        <span class="s1">&#39;percentile&#39;</span><span class="p">:</span> <span class="n">percentile</span><span class="p">,</span>
+        <span class="s1">&#39;threshold&#39;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">,</span>
+        <span class="s1">&#39;operator&#39;</span><span class="p">:</span> <span class="n">operator</span><span class="p">,</span>
+        <span class="s1">&#39;reference_subset&#39;</span><span class="p">:</span> <span class="n">reference_subset</span><span class="p">,</span>
+        <span class="s1">&#39;n_reference_cells&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">reference_cells</span><span class="p">),</span>
+        <span class="s1">&#39;n_cells_before&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span>
+        <span class="s1">&#39;n_cells_after&#39;</span><span class="p">:</span> <span class="n">adata_filtered</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span>
+        <span class="s1">&#39;n_cells_removed&#39;</span><span class="p">:</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">-</span> <span class="n">adata_filtered</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span>
+        <span class="s1">&#39;fraction_removed&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">-</span> <span class="n">adata_filtered</span><span class="o">.</span><span class="n">n_obs</span><span class="p">)</span> <span class="o">/</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Filter results:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Cells before: </span><span class="si">{</span><span class="n">filter_info</span><span class="p">[</span><span class="s1">&#39;n_cells_before&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Cells after: </span><span class="si">{</span><span class="n">filter_info</span><span class="p">[</span><span class="s1">&#39;n_cells_after&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Cells removed: </span><span class="si">{</span><span class="n">filter_info</span><span class="p">[</span><span class="s1">&#39;n_cells_removed&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">filter_info</span><span class="p">[</span><span class="s1">&#39;fraction_removed&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">adata_filtered</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">filter_info</span></div>
+
+
+
+<div class="viewcode-block" id="prepare_data_for_elastic_net">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_data_for_elastic_net</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">filter_2n</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">optional_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">protein_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">exclude_conditions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepare data for Elastic Net analysis (Stage 2 preprocessing).</span>
+<span class="sd">    </span>
+<span class="sd">    This function assumes adata already has GMM labels from label_ploidy_and_proliferation_gmm().</span>
+<span class="sd">    </span>
+<span class="sd">    Pipeline:</span>
+<span class="sd">    1. Exclude specified conditions (optional)</span>
+<span class="sd">    2. Filter to 2N cells (optional, recommended)</span>
+<span class="sd">    3. Apply percentile-based filter (optional, e.g., Fra1)</span>
+<span class="sd">    4. Extract specified proteins</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Data with GMM labels already applied (from label_ploidy_and_proliferation_gmm)</span>
+<span class="sd">        Must have columns: &#39;ploidy_label&#39;, &#39;prolif_label&#39;</span>
+<span class="sd">    filter_2n : bool</span>
+<span class="sd">        If True, keep only 2N cells (default True)</span>
+<span class="sd">    optional_filter : dict or None</span>
+<span class="sd">        Percentile filter configuration:</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;enabled&#39;: bool,</span>
+<span class="sd">            &#39;feature&#39;: str (e.g., &#39;Int_Med_Fra1_nuc&#39;),</span>
+<span class="sd">            &#39;operator&#39;: str (&#39;lt&#39;, &#39;le&#39;, &#39;gt&#39;, &#39;ge&#39;),</span>
+<span class="sd">            &#39;percentile&#39;: float (0-100),</span>
+<span class="sd">            &#39;reference_subset&#39;: str (&#39;all&#39;, &#39;nonprolif&#39;, &#39;prolif&#39;, &#39;2N&#39;),</span>
+<span class="sd">            &#39;subset_label_key&#39;: str (e.g., &#39;prolif_label&#39;),</span>
+<span class="sd">            &#39;subset_label_value&#39;: int (e.g., 0 for nonprolif)</span>
+<span class="sd">        }</span>
+<span class="sd">    protein_list : list of str or None</span>
+<span class="sd">        Proteins to extract (e.g., [&#39;CycD1&#39;, &#39;CycE&#39;, &#39;p21&#39;, &#39;p27&#39;, &#39;CDK2&#39;, &#39;CDK4&#39;, &#39;CDK6&#39;])</span>
+<span class="sd">        If None, extracts all proteins in .X</span>
+<span class="sd">    exclude_conditions : list of str or None</span>
+<span class="sd">        Conditions to exclude (e.g., [&#39;ERK2000&#39;])</span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        Print progress information (default True)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided, saves preprocessing info to manager.add_preprocessing_info()</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    adata_processed : AnnData</span>
+<span class="sd">        Processed data ready for Elastic Net:</span>
+<span class="sd">        - Filtered by ploidy, optional filter</span>
+<span class="sd">        - Contains only specified proteins in .X (raw intensities)</span>
+<span class="sd">        - Has &#39;prolif_label&#39; column (binary: 0=nonprolif, 1=prolif)</span>
+<span class="sd">    preprocessing_info : dict</span>
+<span class="sd">        Metadata about preprocessing steps:</span>
+<span class="sd">        {</span>
+<span class="sd">            &#39;n_cells_original&#39;: int,</span>
+<span class="sd">            &#39;n_cells_after_condition_filter&#39;: int,</span>
+<span class="sd">            &#39;n_cells_after_2n_filter&#39;: int,</span>
+<span class="sd">            &#39;n_cells_after_optional_filter&#39;: int,</span>
+<span class="sd">            &#39;n_cells_final&#39;: int,</span>
+<span class="sd">            &#39;filter_2n_applied&#39;: bool,</span>
+<span class="sd">            &#39;optional_filter_applied&#39;: bool,</span>
+<span class="sd">            &#39;optional_filter_info&#39;: dict or None,</span>
+<span class="sd">            &#39;excluded_conditions&#39;: list,</span>
+<span class="sd">            &#39;protein_list&#39;: list,</span>
+<span class="sd">            &#39;prolif_distribution&#39;: dict,  # {0: count, 1: count}</span>
+<span class="sd">            &#39;prolif_distribution_pct&#39;: dict  # {0: pct, 1: pct}</span>
+<span class="sd">        }</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # With results manager (recommended for full workflow)</span>
+<span class="sd">    &gt;&gt;&gt; manager = ElasticNetResultsManager(cell_line=&#39;CFPAC&#39;, condition=&#39;control&#39;, additional_info=&#39;g0g1&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; adata_prep, info = prepare_data_for_elastic_net(</span>
+<span class="sd">    ...     adata,</span>
+<span class="sd">    ...     filter_2n=True,</span>
+<span class="sd">    ...     optional_filter={...},</span>
+<span class="sd">    ...     protein_list=[&#39;CycD1&#39;, &#39;CycE&#39;, &#39;p21&#39;, &#39;p27&#39;, &#39;CDK2&#39;, &#39;CDK4&#39;, &#39;CDK6&#39;],</span>
+<span class="sd">    ...     results_manager=manager  # Auto-saves preprocessing info</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &gt;&gt;&gt; # Without manager (manual exploration)</span>
+<span class="sd">    &gt;&gt;&gt; adata_prep, info = prepare_data_for_elastic_net(</span>
+<span class="sd">    ...     adata,</span>
+<span class="sd">    ...     filter_2n=True,</span>
+<span class="sd">    ...     protein_list=[&#39;CycD1&#39;, &#39;CycE&#39;, &#39;p21&#39;, &#39;p27&#39;, &#39;CDK2&#39;, &#39;CDK4&#39;, &#39;CDK6&#39;]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &gt;&gt;&gt; # Step 3: Run Elastic Net</span>
+<span class="sd">    &gt;&gt;&gt; X_raw = adata_prep.X</span>
+<span class="sd">    &gt;&gt;&gt; y = adata_prep.obs[&#39;prolif_label&#39;].values</span>
+<span class="sd">    &gt;&gt;&gt; results = evaluate_all_feature_sets(adata_prep, y, ...)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preparing Data for Elastic Net Analysis&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Check required columns</span>
+    <span class="k">if</span> <span class="n">filter_2n</span> <span class="ow">and</span> <span class="s1">&#39;ploidy_label&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Cannot filter by 2N cells: &#39;ploidy_label&#39; column not found!</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;You must enable ploidy labeling in label_ploidy_and_proliferation_gmm().</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;Options:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  1. Re-run label_ploidy_and_proliferation_gmm() with ploidy_config={&#39;enabled&#39;: True}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  2. Set filter_2n=False in this function to skip ploidy filtering&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s1">&#39;prolif_label&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Missing &#39;prolif_label&#39; column!</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;Please run label_ploidy_and_proliferation_gmm() first!&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Initialize tracking</span>
+    <span class="n">n_original</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span>
+    <span class="n">adata_working</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Step 1: Exclude conditions (optional)</span>
+    <span class="c1"># ========================================================================</span>
+    <span class="k">if</span> <span class="n">exclude_conditions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">exclude_conditions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Check for both &#39;Condition&#39; and &#39;condition&#39; columns</span>
+        <span class="n">condition_col</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s1">&#39;Condition&#39;</span> <span class="ow">in</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">condition_col</span> <span class="o">=</span> <span class="s1">&#39;Condition&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">condition_col</span> <span class="o">=</span> <span class="s1">&#39;condition&#39;</span>
+        
+        <span class="k">if</span> <span class="n">condition_col</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">adata_working</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">condition_col</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">exclude_conditions</span><span class="p">)</span>
+            <span class="n">adata_working</span> <span class="o">=</span> <span class="n">adata_working</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Excluded conditions: </span><span class="si">{</span><span class="n">exclude_conditions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Cells after exclusion: </span><span class="si">{</span><span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⚠️  &#39;Condition&#39; or &#39;condition&#39; column not found, skipping condition exclusion&quot;</span><span class="p">)</span>
+    
+    <span class="n">n_after_condition</span> <span class="o">=</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span>
+    
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Step 2: Filter to 2N cells (optional)</span>
+    <span class="c1"># ========================================================================</span>
+    <span class="k">if</span> <span class="n">filter_2n</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Filtering to 2N cells...&quot;</span><span class="p">)</span>
+        <span class="n">mask_2n</span> <span class="o">=</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;ploidy_label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">adata_working</span> <span class="o">=</span> <span class="n">adata_working</span><span class="p">[</span><span class="n">mask_2n</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  2N cells: </span><span class="si">{</span><span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⚠️  2N filtering disabled - using all ploidy states&quot;</span><span class="p">)</span>
+    
+    <span class="n">n_after_2n</span> <span class="o">=</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span>
+    
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Step 3: Apply optional percentile filter (e.g., Fra1)</span>
+    <span class="c1"># ========================================================================</span>
+    <span class="n">optional_filter_info</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">optional_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">optional_filter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">adata_working</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">optional_filter_info</span> <span class="o">=</span> <span class="n">apply_percentile_filter_from_subset</span><span class="p">(</span>
+            <span class="n">adata_working</span><span class="p">,</span>
+            <span class="n">feature</span><span class="o">=</span><span class="n">optional_filter</span><span class="p">[</span><span class="s1">&#39;feature&#39;</span><span class="p">],</span>
+            <span class="n">percentile</span><span class="o">=</span><span class="n">optional_filter</span><span class="p">[</span><span class="s1">&#39;percentile&#39;</span><span class="p">],</span>
+            <span class="n">operator</span><span class="o">=</span><span class="n">optional_filter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;operator&#39;</span><span class="p">,</span> <span class="s1">&#39;lt&#39;</span><span class="p">),</span>
+            <span class="n">reference_subset</span><span class="o">=</span><span class="n">optional_filter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reference_subset&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">),</span>
+            <span class="n">subset_label_key</span><span class="o">=</span><span class="n">optional_filter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;subset_label_key&#39;</span><span class="p">),</span>
+            <span class="n">subset_label_value</span><span class="o">=</span><span class="n">optional_filter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;subset_label_value&#39;</span><span class="p">),</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">⚠️  Optional filter disabled - no percentile filtering applied&quot;</span><span class="p">)</span>
+    
+    <span class="n">n_after_optional</span> <span class="o">=</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span>
+    
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Step 4: Extract proteins (optional)</span>
+    <span class="c1"># ========================================================================</span>
+    <span class="k">if</span> <span class="n">protein_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Extracting proteins: </span><span class="si">{</span><span class="n">protein_list</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Check which proteins are available</span>
+        <span class="n">available_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">protein_list</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span>
+        <span class="n">missing_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">protein_list</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">var_names</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">missing_proteins</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ⚠️  Missing proteins (skipping): </span><span class="si">{</span><span class="n">missing_proteins</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">available_proteins</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No proteins from list found in data: </span><span class="si">{</span><span class="n">protein_list</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Subset to available proteins</span>
+        <span class="n">adata_working</span> <span class="o">=</span> <span class="n">adata_working</span><span class="p">[:,</span> <span class="n">available_proteins</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Extracted proteins: </span><span class="si">{</span><span class="n">available_proteins</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Final protein count: </span><span class="si">{</span><span class="n">adata_working</span><span class="o">.</span><span class="n">n_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># ========================================================================</span>
+    <span class="c1"># Step 5: Prepare metadata summary</span>
+    <span class="c1"># ========================================================================</span>
+    <span class="n">prolif_dist</span> <span class="o">=</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;prolif_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">prolif_dist_pct</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">/</span><span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span><span class="o">*</span><span class="mi">100</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">prolif_dist</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    
+    <span class="n">preprocessing_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;n_cells_original&#39;</span><span class="p">:</span> <span class="n">n_original</span><span class="p">,</span>
+        <span class="s1">&#39;n_cells_after_condition_filter&#39;</span><span class="p">:</span> <span class="n">n_after_condition</span><span class="p">,</span>
+        <span class="s1">&#39;n_cells_after_2n_filter&#39;</span><span class="p">:</span> <span class="n">n_after_2n</span><span class="p">,</span>
+        <span class="s1">&#39;n_cells_after_optional_filter&#39;</span><span class="p">:</span> <span class="n">n_after_optional</span><span class="p">,</span>
+        <span class="s1">&#39;n_cells_final&#39;</span><span class="p">:</span> <span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span>
+        <span class="s1">&#39;filter_2n_applied&#39;</span><span class="p">:</span> <span class="n">filter_2n</span><span class="p">,</span>
+        <span class="s1">&#39;optional_filter_applied&#39;</span><span class="p">:</span> <span class="n">optional_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">optional_filter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+        <span class="s1">&#39;optional_filter_info&#39;</span><span class="p">:</span> <span class="n">optional_filter_info</span><span class="p">,</span>
+        <span class="s1">&#39;excluded_conditions&#39;</span><span class="p">:</span> <span class="n">exclude_conditions</span> <span class="k">if</span> <span class="n">exclude_conditions</span> <span class="k">else</span> <span class="p">[],</span>
+        <span class="s1">&#39;protein_list&#39;</span><span class="p">:</span> <span class="n">protein_list</span> <span class="k">if</span> <span class="n">protein_list</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">adata_working</span><span class="o">.</span><span class="n">var_names</span><span class="p">),</span>
+        <span class="s1">&#39;prolif_distribution&#39;</span><span class="p">:</span> <span class="n">prolif_dist</span><span class="p">,</span>
+        <span class="s1">&#39;prolif_distribution_pct&#39;</span><span class="p">:</span> <span class="n">prolif_dist_pct</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Data Preparation Complete!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preprocessing summary:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Original cells: </span><span class="si">{</span><span class="n">n_original</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  After condition filter: </span><span class="si">{</span><span class="n">n_after_condition</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  After 2N filter: </span><span class="si">{</span><span class="n">n_after_2n</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  After optional filter: </span><span class="si">{</span><span class="n">n_after_optional</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Final cell count: </span><span class="si">{</span><span class="n">adata_working</span><span class="o">.</span><span class="n">n_obs</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Proliferation distribution:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">prolif_dist</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">label_str</span> <span class="o">=</span> <span class="s1">&#39;prolif&#39;</span> <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;nonprolif&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">label_str</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">prolif_dist_pct</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Ready for Elastic Net analysis!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  X = adata_prep.X  (raw protein intensities)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  y = adata_prep.obs[&#39;prolif_label&#39;].values  (binary labels)&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Save preprocessing info to manager if provided</span>
+    <span class="k">if</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">add_preprocessing_info</span><span class="p">(</span><span class="n">preprocessing_info</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Preprocessing info saved to results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">adata_working</span><span class="p">,</span> <span class="n">preprocessing_info</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Your Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

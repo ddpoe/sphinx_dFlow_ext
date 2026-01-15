@@ -1,0 +1,1754 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>elastic_net_modules.visualization &mdash; Elastic Net Analysis - Workflow Documentation 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/workflow.css?v=4ddc2446" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/workflow.js?v=030014fe"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+    }
+});
+</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Elastic Net Analysis - Workflow Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow_index.html">Auto-Discovery Workflow Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#with-custom-options">With Custom Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#configuration-in-conf-py">Configuration in conf.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#live-example">Live Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#discovered-workflow-markers">Discovered Workflow Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Python Module Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.model_selection">Model Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets"><code class="docutils literal notranslate"><span class="pre">evaluate_all_feature_sets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.apply_1se_rule"><code class="docutils literal notranslate"><span class="pre">apply_1se_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_final_classifier"><code class="docutils literal notranslate"><span class="pre">build_final_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_calibrated_classifier"><code class="docutils literal notranslate"><span class="pre">build_calibrated_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.find_optimal_threshold"><code class="docutils literal notranslate"><span class="pre">find_optimal_threshold()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.data_loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor"><code class="docutils literal notranslate"><span class="pre">AdataProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_line"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_info"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.adata"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.adata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_coords_obsm_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_coords_obsm_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_params_uns_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_params_uns_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_labels_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_labels_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_label_colors_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_label_colors_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.__init__"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_random_forest_feature_set"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_random_forest_feature_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phate_coordinates"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phate_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phase_labels"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phase_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.process_all"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.process_all()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.feature_engineering">Feature Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.log_transform_features"><code class="docutils literal notranslate"><span class="pre">log_transform_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations"><code class="docutils literal notranslate"><span class="pre">generate_all_feature_combinations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.logsumexp10"><code class="docutils literal notranslate"><span class="pre">logsumexp10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.compute_composite_features"><code class="docutils literal notranslate"><span class="pre">compute_composite_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary"><code class="docutils literal notranslate"><span class="pre">print_feature_set_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation_gmm"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation_gmm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset"><code class="docutils literal notranslate"><span class="pre">apply_percentile_filter_from_subset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net"><code class="docutils literal notranslate"><span class="pre">prepare_data_for_elastic_net()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.nested_cv">Nested Cross-Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.nested_cv.nested_cv_single_feature_set"><code class="docutils literal notranslate"><span class="pre">nested_cv_single_feature_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.results_manager">Results Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#key-features">Key Features:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#typical-usage-flow">Typical Usage Flow:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#classes">Classes:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#functions">Functions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.generate_analysis_id"><code class="docutils literal notranslate"><span class="pre">generate_analysis_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_preprocessing_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.get_checkpoint_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.add_preprocessing_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.create_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.visualization">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_model_selection"><code class="docutils literal notranslate"><span class="pre">plot_model_selection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_coefficient_stability"><code class="docutils literal notranslate"><span class="pre">plot_coefficient_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_feature_importance"><code class="docutils literal notranslate"><span class="pre">plot_feature_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_threshold_sweep"><code class="docutils literal notranslate"><span class="pre">plot_threshold_sweep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_null_distribution"><code class="docutils literal notranslate"><span class="pre">plot_null_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution"><code class="docutils literal notranslate"><span class="pre">plot_bootstrap_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_performance_summary"><code class="docutils literal notranslate"><span class="pre">plot_performance_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_scatter_kde"><code class="docutils literal notranslate"><span class="pre">plot_scatter_kde()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#nested-cv-analysis">Nested CV Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#feature-set-exploration">Feature Set Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#model-evaluation">Model Evaluation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Elastic Net Analysis - Workflow Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">elastic_net_modules.visualization</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for elastic_net_modules.visualization</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Visualization Module for Elastic Net Analysis Pipeline</span>
+
+<span class="sd">This module provides professional, publication-ready diagnostic plots for</span>
+<span class="sd">the Elastic Net cell cycle analysis pipeline.</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">    - plot_model_selection(): Model comparison with 1-SE threshold</span>
+<span class="sd">    - plot_coefficient_stability(): Coefficient consistency across folds</span>
+<span class="sd">    - plot_feature_importance(): Final model coefficient bar chart</span>
+<span class="sd">    - plot_threshold_sweep(): MCC optimization curve</span>
+<span class="sd">    - plot_null_distribution(): Null model test visualization</span>
+<span class="sd">    - plot_bootstrap_distribution(): Bootstrap CI visualization</span>
+<span class="sd">    - plot_performance_summary(): AUROC vs features panel</span>
+<span class="sd">    - create_summary_report(): Comprehensive HTML report (future)</span>
+
+<span class="sd">Design Philosophy:</span>
+<span class="sd">    - Input flexibility: Accept results dicts, DataFrames, or arrays</span>
+<span class="sd">    - Consistent styling: Professional matplotlib/seaborn theme</span>
+<span class="sd">    - Save capability: All functions support save_path parameter</span>
+<span class="sd">    - Publication ready: High DPI, tight layouts, clear fonts</span>
+
+<span class="sd">Author: AI Assistant</span>
+<span class="sd">Date: November 13, 2025</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Patch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.results_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticNetResultsManager</span>
+
+<span class="c1"># Set professional style</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;darkgrid&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">150</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.titlesize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;legend.fontsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">9</span>
+
+
+<div class="viewcode-block" id="plot_model_selection">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_model_selection">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_model_selection</span><span class="p">(</span>
+    <span class="n">results_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">selection_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create bar chart showing all models with 1-SE threshold line.</span>
+<span class="sd">    </span>
+<span class="sd">    Recreates the chart from the HTML protocol, showing all models</span>
+<span class="sd">    sorted by AUROC with error bars and selection highlighting.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    results_df : pd.DataFrame</span>
+<span class="sd">        Output from evaluate_all_feature_sets()</span>
+<span class="sd">        Must have: model_id, model_name, mean_auroc, se_auroc</span>
+<span class="sd">    selection_results : dict</span>
+<span class="sd">        Output from apply_1se_rule()</span>
+<span class="sd">        Must have: best_model, primary_model, threshold</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size (width, height) in inches</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, ax : matplotlib figure and axis</span>
+<span class="sd">    </span>
+<span class="sd">    Visual Elements</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    - Bar chart sorted by AUROC (descending)</span>
+<span class="sd">    - Error bars showing ±1 SE</span>
+<span class="sd">    - Red star marking best model</span>
+<span class="sd">    - Green star marking selected model (1-SE rule)</span>
+<span class="sd">    - Horizontal dashed line at 1-SE threshold</span>
+<span class="sd">    - Color-coded bars: gray (all), highlighted for best/selected</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; results_df = evaluate_all_feature_sets(...)</span>
+<span class="sd">    &gt;&gt;&gt; selection = apply_1se_rule(results_df)</span>
+<span class="sd">    &gt;&gt;&gt; fig, ax = plot_model_selection(results_df, selection, </span>
+<span class="sd">    ...                                  save_path=&#39;model_selection.png&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; plt.show()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Sort by AUROC for better visualization</span>
+    <span class="n">plot_df</span> <span class="o">=</span> <span class="n">results_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Extract info</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="n">selection_results</span><span class="p">[</span><span class="s1">&#39;best_model&#39;</span><span class="p">]</span>
+    <span class="n">selected_model</span> <span class="o">=</span> <span class="n">selection_results</span><span class="p">[</span><span class="s1">&#39;primary_model&#39;</span><span class="p">]</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">selection_results</span><span class="p">[</span><span class="s1">&#39;threshold&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># Create figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    
+    <span class="c1"># Plot all models with error bars</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plot_df</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">plot_df</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">],</span> 
+        <span class="n">yerr</span><span class="o">=</span><span class="n">plot_df</span><span class="p">[</span><span class="s1">&#39;se_auroc&#39;</span><span class="p">],</span>
+        <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;All models&#39;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Highlight best model</span>
+    <span class="n">best_idx</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span><span class="n">plot_df</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">best_idx</span><span class="p">,</span> <span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">],</span> 
+        <span class="s1">&#39;r*&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Best model (ID </span><span class="si">{</span><span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Highlight selected model</span>
+    <span class="n">selected_idx</span> <span class="o">=</span> <span class="n">plot_df</span><span class="p">[</span><span class="n">plot_df</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">selected_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">selected_idx</span><span class="p">,</span> <span class="n">selected_model</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">],</span> 
+        <span class="s1">&#39;g*&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Selected by 1-SE rule (ID </span><span class="si">{</span><span class="n">selected_model</span><span class="p">[</span><span class="s1">&#39;model_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Draw threshold line</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
+        <span class="n">threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> 
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;1-SE Threshold (</span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">)&#39;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Labels and formatting</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Models (sorted by AUROC, descending)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mean AUROC&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Model Selection with 1-SE Rule&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Add annotation with key info</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Best: </span><span class="si">{</span><span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;  (</span><span class="si">{</span><span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;n_base_features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> features, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;AUROC=</span><span class="si">{</span><span class="n">best_model</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Selected: </span><span class="si">{</span><span class="n">selected_model</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;  (</span><span class="si">{</span><span class="n">selected_model</span><span class="p">[</span><span class="s1">&#39;n_base_features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> features, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;AUROC=</span><span class="si">{</span><span class="n">selected_model</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="mf">0.98</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">info_text</span><span class="p">,</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+        <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Model selection plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;model_selection&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Model selection plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+
+<div class="viewcode-block" id="plot_coefficient_stability">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_coefficient_stability">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_coefficient_stability</span><span class="p">(</span>
+    <span class="n">stability_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create horizontal bar chart with error bars showing coefficient stability.</span>
+<span class="sd">    </span>
+<span class="sd">    Color-codes features by stability (green=stable, red=unstable) and</span>
+<span class="sd">    shows mean ± std dev across CV folds.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    stability_df : pd.DataFrame</span>
+<span class="sd">        Output from coefficient_stability_check()</span>
+<span class="sd">        Must have: feature, mean_coef, std_coef, is_stable</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size (width, height)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, ax : matplotlib figure and axis</span>
+<span class="sd">    </span>
+<span class="sd">    Visual Elements</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    - Horizontal bars sorted by |mean_coef| (most important first)</span>
+<span class="sd">    - Error bars showing ±1 std dev</span>
+<span class="sd">    - Green bars: stable features (all folds same sign)</span>
+<span class="sd">    - Red bars: unstable features (sign flipping)</span>
+<span class="sd">    - Vertical line at zero</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; stability_df = coefficient_stability_check(...)</span>
+<span class="sd">    &gt;&gt;&gt; fig, ax = plot_coefficient_stability(stability_df,</span>
+<span class="sd">    ...                                        save_path=&#39;coef_stability.png&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Sort by absolute mean coefficient</span>
+    <span class="n">stability_df_sorted</span> <span class="o">=</span> <span class="n">stability_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;mean_coef&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">abs</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Create figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    
+    <span class="c1"># Create colors: green for stable, red for unstable</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;green&#39;</span> <span class="k">if</span> <span class="n">stable</span> <span class="k">else</span> <span class="s1">&#39;red&#39;</span> <span class="k">for</span> <span class="n">stable</span> <span class="ow">in</span> <span class="n">stability_df_sorted</span><span class="p">[</span><span class="s1">&#39;is_stable&#39;</span><span class="p">]]</span>
+    
+    <span class="c1"># Plot mean coefficients with error bars (±1 std)</span>
+    <span class="n">y_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stability_df_sorted</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
+        <span class="n">y_pos</span><span class="p">,</span> 
+        <span class="n">stability_df_sorted</span><span class="p">[</span><span class="s1">&#39;mean_coef&#39;</span><span class="p">],</span>
+        <span class="n">xerr</span><span class="o">=</span><span class="n">stability_df_sorted</span><span class="p">[</span><span class="s1">&#39;std_coef&#39;</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> 
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> 
+        <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Add labels</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">y_pos</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">stability_df_sorted</span><span class="p">[</span><span class="s1">&#39;feature&#39;</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Mean Coefficient ± Std Dev&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="s1">&#39;Coefficient Stability Across CV Folds</span><span class="se">\n</span><span class="s1">(Green = Stable, Red = Unstable)&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Add legend</span>
+    <span class="n">legend_elements</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Stable (consistent sign)&#39;</span><span class="p">),</span>
+        <span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Unstable (sign flipping)&#39;</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">legend_elements</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    
+    <span class="c1"># Add summary statistics</span>
+    <span class="n">n_stable</span> <span class="o">=</span> <span class="n">stability_df</span><span class="p">[</span><span class="s1">&#39;is_stable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">n_unstable</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">stability_df</span><span class="p">[</span><span class="s1">&#39;is_stable&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">summary_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Stable: </span><span class="si">{</span><span class="n">n_stable</span><span class="si">}</span><span class="se">\n</span><span class="s2">Unstable: </span><span class="si">{</span><span class="n">n_unstable</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="mf">0.98</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">summary_text</span><span class="p">,</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+        <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Coefficient stability plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;coefficient_stability&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Coefficient stability plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+
+<div class="viewcode-block" id="plot_feature_importance">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_feature_importance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_feature_importance</span><span class="p">(</span>
+    <span class="n">final_classifier</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Bar chart of final model coefficients.</span>
+<span class="sd">    </span>
+<span class="sd">    Shows which features are most important for prediction.</span>
+<span class="sd">    Positive coefficients increase proliferation probability.</span>
+<span class="sd">    Negative coefficients decrease proliferation probability.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    final_classifier : dict</span>
+<span class="sd">        Output from build_final_classifier()</span>
+<span class="sd">        Must have: &#39;feature_names&#39;, &#39;model&#39; (with .coef_ attribute)</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, ax : matplotlib figure and axis</span>
+<span class="sd">    </span>
+<span class="sd">    Visual Elements</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    - Horizontal bar chart sorted by |coefficient|</span>
+<span class="sd">    - Green bars: positive coefficients (pro-proliferation)</span>
+<span class="sd">    - Red bars: negative coefficients (anti-proliferation)</span>
+<span class="sd">    - Vertical line at zero</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; final_classifier = build_final_classifier(...)</span>
+<span class="sd">    &gt;&gt;&gt; fig, ax = plot_feature_importance(</span>
+<span class="sd">    ...     final_classifier,</span>
+<span class="sd">    ...     save_path=&#39;feature_importance.png&#39;</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract coefficients and feature names</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">final_classifier</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">feature_names</span> <span class="o">=</span> <span class="n">final_classifier</span><span class="p">[</span><span class="s1">&#39;feature_names&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># Create DataFrame and sort by coefficient value</span>
+    <span class="n">coef_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="n">feature_names</span><span class="p">,</span>
+        <span class="s1">&#39;coefficient&#39;</span><span class="p">:</span> <span class="n">coefficients</span>
+    <span class="p">})</span>
+    <span class="n">coef_df_sorted</span> <span class="o">=</span> <span class="n">coef_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;coefficient&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Create figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    
+    <span class="c1"># Create colors: red for negative, green for positive</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;red&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;green&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">coef_df_sorted</span><span class="p">[</span><span class="s1">&#39;coefficient&#39;</span><span class="p">]]</span>
+    
+    <span class="c1"># Plot horizontal bars</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
+        <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coef_df_sorted</span><span class="p">)),</span> 
+        <span class="n">coef_df_sorted</span><span class="p">[</span><span class="s1">&#39;coefficient&#39;</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> 
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Add labels</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coef_df_sorted</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">coef_df_sorted</span><span class="p">[</span><span class="s1">&#39;feature&#39;</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Coefficient Value&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Feature Importance (Model Coefficients)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Add legend explaining colors</span>
+    <span class="n">legend_elements</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Pro-proliferation (positive)&#39;</span><span class="p">),</span>
+        <span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Anti-proliferation (negative)&#39;</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">legend_elements</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    
+    <span class="c1"># Add interpretation note</span>
+    <span class="n">note_text</span> <span class="o">=</span> <span class="s2">&quot;Larger |coefficient| = stronger influence on prediction&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="mf">0.98</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">note_text</span><span class="p">,</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+        <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Feature importance plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;feature_importance&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Feature importance plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+
+<div class="viewcode-block" id="plot_threshold_sweep">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_threshold_sweep">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_threshold_sweep</span><span class="p">(</span>
+    <span class="n">threshold_curve</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">optimal_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot metric value vs threshold, highlighting optimal threshold.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    threshold_curve : dict</span>
+<span class="sd">        From find_optimal_threshold() output or final_classifier[&#39;threshold_curve&#39;]</span>
+<span class="sd">        Must have: &#39;thresholds&#39;, &#39;mcc_values&#39; (or other metric)</span>
+<span class="sd">    optimal_threshold : float</span>
+<span class="sd">        The selected optimal threshold value</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, ax : matplotlib figure and axis</span>
+<span class="sd">    </span>
+<span class="sd">    Visual Elements</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    - Line plot: threshold vs metric (e.g., MCC)</span>
+<span class="sd">    - Vertical red dashed line at optimal threshold</span>
+<span class="sd">    - Horizontal green dashed line at max metric value</span>
+<span class="sd">    - Annotation box with optimal values</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from build_final_classifier output:</span>
+<span class="sd">    &gt;&gt;&gt; fig, ax = plot_threshold_sweep(</span>
+<span class="sd">    ...     final_classifier[&#39;threshold_curve&#39;],</span>
+<span class="sd">    ...     final_classifier[&#39;optimal_threshold&#39;],</span>
+<span class="sd">    ...     save_path=&#39;threshold_sweep.png&#39;</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract data</span>
+    <span class="n">thresholds</span> <span class="o">=</span> <span class="n">threshold_curve</span><span class="p">[</span><span class="s1">&#39;thresholds&#39;</span><span class="p">]</span>
+    <span class="n">mcc_values</span> <span class="o">=</span> <span class="n">threshold_curve</span><span class="p">[</span><span class="s1">&#39;mcc_values&#39;</span><span class="p">]</span>
+    <span class="n">max_mcc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">mcc_values</span><span class="p">)</span>
+    
+    <span class="c1"># Create figure</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    
+    <span class="c1"># Plot threshold curve</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">thresholds</span><span class="p">,</span> <span class="n">mcc_values</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;MCC vs Threshold&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Mark optimal threshold</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">optimal_threshold</span><span class="p">,</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Optimal threshold: </span><span class="si">{</span><span class="n">optimal_threshold</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Mark max MCC</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
+        <span class="n">max_mcc</span><span class="p">,</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> 
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Max MCC: </span><span class="si">{</span><span class="n">max_mcc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Labels and formatting</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Classification Threshold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Matthews Correlation Coefficient (MCC)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Threshold Optimization Curve&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Add annotation box</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Optimal: </span><span class="si">{</span><span class="n">optimal_threshold</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;MCC: </span><span class="si">{</span><span class="n">max_mcc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">,</span> <span class="n">info_text</span><span class="p">,</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span>
+        <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+        <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Threshold sweep plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;threshold_sweep&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Threshold sweep plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+
+<div class="viewcode-block" id="plot_null_distribution">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_null_distribution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_null_distribution</span><span class="p">(</span>
+    <span class="n">null_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot null model test distribution.</span>
+<span class="sd">    </span>
+<span class="sd">    Shows histogram of AUROC values from shuffled labels (null distribution)</span>
+<span class="sd">    compared to true model AUROC.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    null_results : dict</span>
+<span class="sd">        Output from null_model_test()</span>
+<span class="sd">        Must have: true_model_auroc, null_aurocs, mean_null_auroc, p_value, is_significant</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, ax : matplotlib figure and axis</span>
+<span class="sd">    </span>
+<span class="sd">    Visual Elements</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    - Histogram of null AUROCs (gray)</span>
+<span class="sd">    - Vertical line at true AUROC (red)</span>
+<span class="sd">    - Vertical line at mean null AUROC (blue)</span>
+<span class="sd">    - Text box with p-value and significance</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; null_results = null_model_test(...)</span>
+<span class="sd">    &gt;&gt;&gt; fig, ax = plot_null_distribution(null_results, save_path=&#39;null_test.png&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    
+    <span class="c1"># Histogram of null AUROCs</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+        <span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;null_aurocs&#39;</span><span class="p">],</span> 
+        <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> 
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Null distribution (shuffled labels)&#39;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Mark true AUROC</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;true_model_auroc&#39;</span><span class="p">],</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;True AUROC: </span><span class="si">{</span><span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;true_model_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Mark mean null AUROC</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;mean_null_auroc&#39;</span><span class="p">],</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean Null: </span><span class="si">{</span><span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;mean_null_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Add text box with p-value</span>
+    <span class="n">sig_symbol</span> <span class="o">=</span> <span class="s2">&quot;✅&quot;</span> <span class="k">if</span> <span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;is_significant&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;❌&quot;</span>
+    <span class="n">textstr</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;p-value: </span><span class="si">{</span><span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;p_value&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;Significant: </span><span class="si">{</span><span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;is_significant&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sig_symbol</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Model beats random&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">null_results</span><span class="p">[</span><span class="s1">&#39;is_significant&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Model = random&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">textstr</span><span class="p">,</span> 
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> 
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> 
+        <span class="n">bbox</span><span class="o">=</span><span class="n">props</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Labels and formatting</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;AUROC&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Null Model Test: True Model vs. Shuffled Labels&#39;</span><span class="p">,</span> 
+                 <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Null distribution plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;null_distribution&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Null distribution plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+
+<div class="viewcode-block" id="plot_bootstrap_distribution">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_bootstrap_distribution</span><span class="p">(</span>
+    <span class="n">bootstrap_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot bootstrap confidence interval distribution.</span>
+<span class="sd">    </span>
+<span class="sd">    Shows histogram of bootstrap AUROC values with confidence intervals</span>
+<span class="sd">    and summary statistics.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bootstrap_results : dict</span>
+<span class="sd">        Output from bootstrap_confidence_intervals()</span>
+<span class="sd">        Must have: bootstrap_aurocs, mean_auroc, median_auroc, ci_lower, </span>
+<span class="sd">                   ci_upper, n_bootstrap</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, ax : matplotlib figure and axis</span>
+<span class="sd">    </span>
+<span class="sd">    Visual Elements</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    - Histogram of bootstrap AUROCs (skyblue)</span>
+<span class="sd">    - Vertical line at mean (red)</span>
+<span class="sd">    - Vertical line at median (orange)</span>
+<span class="sd">    - Vertical lines at CI bounds (green)</span>
+<span class="sd">    - Text box with CI width and interpretation</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; bootstrap_results = bootstrap_confidence_intervals(...)</span>
+<span class="sd">    &gt;&gt;&gt; fig, ax = plot_bootstrap_distribution(bootstrap_results, </span>
+<span class="sd">    ...                                         save_path=&#39;bootstrap_ci.png&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    
+    <span class="c1"># Histogram of bootstrap AUROCs</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span>
+        <span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;bootstrap_aurocs&#39;</span><span class="p">],</span> 
+        <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> 
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Bootstrap distribution&#39;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Mark mean and median</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">],</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean: </span><span class="si">{</span><span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;median_auroc&#39;</span><span class="p">],</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Median: </span><span class="si">{</span><span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;median_auroc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Mark confidence interval</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;ci_lower&#39;</span><span class="p">],</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;95% CI: [</span><span class="si">{</span><span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;ci_lower&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;ci_upper&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;ci_upper&#39;</span><span class="p">],</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Add text box with CI width</span>
+    <span class="n">ci_width</span> <span class="o">=</span> <span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;ci_upper&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">bootstrap_results</span><span class="p">[</span><span class="s1">&#39;ci_lower&#39;</span><span class="p">]</span>
+    <span class="n">stability_text</span> <span class="o">=</span> <span class="s1">&#39;Narrow (stable)&#39;</span> <span class="k">if</span> <span class="n">ci_width</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="k">else</span> <span class="s1">&#39;Wide (unstable)&#39;</span>
+    <span class="n">stability_symbol</span> <span class="o">=</span> <span class="s1">&#39;✅&#39;</span> <span class="k">if</span> <span class="n">ci_width</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="k">else</span> <span class="s1">&#39;⚠️&#39;</span>
+    <span class="n">textstr</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;CI Width: </span><span class="si">{</span><span class="n">ci_width</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stability_text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">stability_symbol</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">props</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;wheat&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">textstr</span><span class="p">,</span> 
+        <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> 
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> 
+        <span class="n">bbox</span><span class="o">=</span><span class="n">props</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Labels and formatting</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;AUROC&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;Bootstrap Distribution (</span><span class="si">{</span><span class="n">bootstrap_results</span><span class="p">[</span><span class="s2">&quot;n_bootstrap&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> samples)&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Bootstrap distribution plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;bootstrap_distribution&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Bootstrap distribution plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+
+<div class="viewcode-block" id="plot_performance_summary">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_performance_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_performance_summary</span><span class="p">(</span>
+    <span class="n">results_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create summary panel with AUROC vs features and AUROC distribution.</span>
+<span class="sd">    </span>
+<span class="sd">    Two-panel figure showing:</span>
+<span class="sd">    1. AUROC vs number of base features (scatter with error bars)</span>
+<span class="sd">    2. AUROC distribution histogram</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    results_df : pd.DataFrame</span>
+<span class="sd">        Output from evaluate_all_feature_sets()</span>
+<span class="sd">        Must have: n_base_features, mean_auroc, se_auroc</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size (width, height)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, axes : matplotlib figure and array of axes</span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; results_df = evaluate_all_feature_sets(...)</span>
+<span class="sd">    &gt;&gt;&gt; fig, axes = plot_performance_summary(results_df, </span>
+<span class="sd">    ...                                        save_path=&#39;performance_summary.png&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    
+    <span class="c1"># Plot 1: AUROC vs Number of Features</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+        <span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;n_base_features&#39;</span><span class="p">],</span> 
+        <span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">],</span>
+        <span class="n">yerr</span><span class="o">=</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;se_auroc&#39;</span><span class="p">],</span> 
+        <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> 
+        <span class="n">capsize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+        <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Base Features&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mean AUROC&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Model Performance vs Feature Count&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Plot 2: AUROC distribution</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+        <span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> 
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> 
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Mean: </span><span class="si">{</span><span class="n">results_df</span><span class="p">[</span><span class="s1">&#39;mean_auroc&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Mean AUROC&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;AUROC Distribution&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Performance summary plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;performance_summary&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Performance summary plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
+
+
+
+<div class="viewcode-block" id="plot_scatter_kde">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.visualization.plot_scatter_kde">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_scatter_kde</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">x_feature</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+    <span class="n">y_feature</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+    <span class="n">label_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">results_manager</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;ElasticNetResultsManager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="n">scatter_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">kde_levels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">title</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">xlim_percentile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ylim_percentile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create scatter plot with 2D KDE contours and marginal distributions.</span>
+<span class="sd">    </span>
+<span class="sd">    Visualizes relationship between two features (single or ratio) with</span>
+<span class="sd">    proliferation labels, showing 2D KDE contours and optional thresholds.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        AnnData object containing features and labels</span>
+<span class="sd">    x_feature : str or tuple</span>
+<span class="sd">        X-axis feature. Single feature name or (numerator, denominator) for ratio</span>
+<span class="sd">        Example: &#39;Int_Med_Fra1_nuc&#39; or (&#39;Int_Med_pRB_nuc&#39;, &#39;Int_Med_RB_nuc&#39;)</span>
+<span class="sd">    y_feature : str or tuple</span>
+<span class="sd">        Y-axis feature. Single feature name or (numerator, denominator) for ratio</span>
+<span class="sd">    label_key : str</span>
+<span class="sd">        Column name in adata.obs for binary labels (e.g., &#39;prolif_gmm_label&#39;)</span>
+<span class="sd">    x_threshold : float or None</span>
+<span class="sd">        Optional vertical line threshold for x-axis (e.g., filter cutoff)</span>
+<span class="sd">    y_threshold : float or None</span>
+<span class="sd">        Optional horizontal line threshold for y-axis</span>
+<span class="sd">    save_path : str or None</span>
+<span class="sd">        If provided, save figure to this path (overrides results_manager)</span>
+<span class="sd">    results_manager : ElasticNetResultsManager or None</span>
+<span class="sd">        If provided and save_path is None, auto-saves via manager.save_plot()</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure size (width, height)</span>
+<span class="sd">    scatter_alpha : float</span>
+<span class="sd">        Transparency of scatter points (0-1)</span>
+<span class="sd">    kde_levels : int</span>
+<span class="sd">        Number of contour levels for 2D KDE</span>
+<span class="sd">    title : str or None</span>
+<span class="sd">        Custom title. If None, auto-generates from features</span>
+<span class="sd">    xlim_percentile : float, tuple of floats, or None</span>
+<span class="sd">        If float: set upper x-axis limit to this percentile, auto-scale lower (e.g., 99)</span>
+<span class="sd">        If tuple: set (lower, upper) x-axis limits to these percentiles (e.g., (1, 99))</span>
+<span class="sd">                 Can use None in tuple to skip a bound (e.g., (None, 99) for upper only)</span>
+<span class="sd">        If None: auto-scale both limits (default)</span>
+<span class="sd">    ylim_percentile : float, tuple of floats, or None</span>
+<span class="sd">        If float: set upper y-axis limit to this percentile, auto-scale lower (e.g., 99)</span>
+<span class="sd">        If tuple: set (lower, upper) y-axis limits to these percentiles (e.g., (1, 99))</span>
+<span class="sd">                 Can use None in tuple to skip a bound (e.g., (None, 99) for upper only)</span>
+<span class="sd">        If None: auto-scale both limits (default)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig, axes : matplotlib figure and dict of axes</span>
+<span class="sd">        axes dict has keys: &#39;main&#39;, &#39;top&#39;, &#39;right&#39;</span>
+<span class="sd">        </span>
+<span class="sd">    Visual Elements</span>
+<span class="sd">    ---------------</span>
+<span class="sd">    Layout:</span>
+<span class="sd">        - Main: Scatter plot with 2D KDE contours (colored by label)</span>
+<span class="sd">        - Top: X-axis marginal distribution (1D KDE per label)</span>
+<span class="sd">        - Right: Y-axis marginal distribution (1D KDE per label)</span>
+<span class="sd">    </span>
+<span class="sd">    Features:</span>
+<span class="sd">        - Scatter points colored by label class</span>
+<span class="sd">        - 2D KDE contours for each label class</span>
+<span class="sd">        - Dashed red lines for thresholds (if provided)</span>
+<span class="sd">        - Marginal 1D KDE distributions</span>
+<span class="sd">        </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; # Single features with upper percentile limit only</span>
+<span class="sd">    &gt;&gt;&gt; fig, axes = plot_scatter_kde(</span>
+<span class="sd">    ...     adata,</span>
+<span class="sd">    ...     x_feature=&#39;Int_Med_Fra1_nuc&#39;,</span>
+<span class="sd">    ...     y_feature=&#39;Int_Med_PCNA_nuc&#39;,</span>
+<span class="sd">    ...     label_key=&#39;prolif_gmm_label&#39;,</span>
+<span class="sd">    ...     x_threshold=2.5,</span>
+<span class="sd">    ...     xlim_percentile=99  # Only set upper limit to 99th percentile</span>
+<span class="sd">    ... )</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # With both lower and upper percentile limits</span>
+<span class="sd">    &gt;&gt;&gt; fig, axes = plot_scatter_kde(</span>
+<span class="sd">    ...     adata,</span>
+<span class="sd">    ...     x_feature=&#39;Int_Med_Fra1_nuc&#39;,</span>
+<span class="sd">    ...     y_feature=&#39;Int_Med_PCNA_nuc&#39;,</span>
+<span class="sd">    ...     label_key=&#39;prolif_gmm_label&#39;,</span>
+<span class="sd">    ...     xlim_percentile=(1, 99),  # Set both limits</span>
+<span class="sd">    ...     ylim_percentile=(1, 99)</span>
+<span class="sd">    ... )</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # With None in tuple to specify only one bound</span>
+<span class="sd">    &gt;&gt;&gt; fig, axes = plot_scatter_kde(</span>
+<span class="sd">    ...     adata,</span>
+<span class="sd">    ...     x_feature=&#39;Int_Med_Fra1_nuc&#39;,</span>
+<span class="sd">    ...     y_feature=&#39;Int_Med_PCNA_nuc&#39;,</span>
+<span class="sd">    ...     label_key=&#39;prolif_gmm_label&#39;,</span>
+<span class="sd">    ...     xlim_percentile=(None, 99),  # Only upper, same as xlim_percentile=99</span>
+<span class="sd">    ...     ylim_percentile=(5, None)     # Only lower limit</span>
+<span class="sd">    ... )</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # Ratio feature with auto-save</span>
+<span class="sd">    &gt;&gt;&gt; fig, axes = plot_scatter_kde(</span>
+<span class="sd">    ...     adata,</span>
+<span class="sd">    ...     x_feature=&#39;Int_Med_Fra1_nuc&#39;,</span>
+<span class="sd">    ...     y_feature=(&#39;Int_Med_pRB_nuc&#39;, &#39;Int_Med_RB_nuc&#39;),</span>
+<span class="sd">    ...     label_key=&#39;prolif_gmm_label&#39;,</span>
+<span class="sd">    ...     results_manager=manager</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Helper function to extract feature values</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_log10_feature_values</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract feature values using obs_vector().&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># Ratio: numerator / denominator</span>
+            <span class="n">num_values</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs_vector</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">denom_values</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs_vector</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># Avoid division by zero</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">num_values</span><span class="p">,</span> <span class="n">denom_values</span><span class="p">,</span> 
+                             <span class="n">where</span><span class="o">=</span><span class="n">denom_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> 
+                             <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">num_values</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
+            <span class="c1"># Generate label</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">feature</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">feature</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single feature</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs_vector</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">feature</span>
+        <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="n">label</span>
+    
+    <span class="c1"># Extract x and y values</span>
+    <span class="n">x_values</span><span class="p">,</span> <span class="n">x_label</span> <span class="o">=</span> <span class="n">get_log10_feature_values</span><span class="p">(</span><span class="n">x_feature</span><span class="p">)</span>
+    <span class="n">y_values</span><span class="p">,</span> <span class="n">y_label</span> <span class="o">=</span> <span class="n">get_log10_feature_values</span><span class="p">(</span><span class="n">y_feature</span><span class="p">)</span>
+    
+    <span class="c1"># Extract labels</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">label_key</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">unique_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    
+    <span class="c1"># Remove NaN values</span>
+    <span class="n">valid_mask</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x_values</span><span class="p">)</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_values</span><span class="p">))</span>
+    <span class="n">x_values</span> <span class="o">=</span> <span class="n">x_values</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">]</span>
+    <span class="n">y_values</span> <span class="o">=</span> <span class="n">y_values</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">]</span>
+    
+    <span class="c1"># Calculate axis limits based on percentiles if provided</span>
+    <span class="n">x_lim_lower</span><span class="p">,</span> <span class="n">x_lim_upper</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">xlim_percentile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xlim_percentile</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># Tuple: (lower, upper) percentiles</span>
+            <span class="c1"># Allow None in tuple to skip that bound</span>
+            <span class="n">x_lim_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">xlim_percentile</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">xlim_percentile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">x_lim_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">xlim_percentile</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">xlim_percentile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single value: only upper limit, auto-scale lower</span>
+            <span class="n">x_lim_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">xlim_percentile</span><span class="p">)</span>
+    
+    <span class="n">y_lim_lower</span><span class="p">,</span> <span class="n">y_lim_upper</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">ylim_percentile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ylim_percentile</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># Tuple: (lower, upper) percentiles</span>
+            <span class="c1"># Allow None in tuple to skip that bound</span>
+            <span class="n">y_lim_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">y_values</span><span class="p">,</span> <span class="n">ylim_percentile</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">ylim_percentile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">y_lim_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">y_values</span><span class="p">,</span> <span class="n">ylim_percentile</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">ylim_percentile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single value: only upper limit, auto-scale lower</span>
+            <span class="n">y_lim_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">y_values</span><span class="p">,</span> <span class="n">ylim_percentile</span><span class="p">)</span>
+    
+    <span class="c1"># Create figure with gridspec for marginals</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.gridspec</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSpec</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    
+    <span class="n">ax_main</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax_top</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sharex</span><span class="o">=</span><span class="n">ax_main</span><span class="p">)</span>
+    <span class="n">ax_right</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sharey</span><span class="o">=</span><span class="n">ax_main</span><span class="p">)</span>
+    
+    <span class="c1"># Color map for labels</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">]</span>
+    <span class="n">label_colors</span> <span class="o">=</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_labels</span><span class="p">)}</span>
+    
+    <span class="c1"># Main scatter plot with KDE contours</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">unique_labels</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">label</span>
+        <span class="n">x_subset</span> <span class="o">=</span> <span class="n">x_values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">y_subset</span> <span class="o">=</span> <span class="n">y_values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        
+        <span class="c1"># Scatter plot</span>
+        <span class="n">ax_main</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+            <span class="n">x_subset</span><span class="p">,</span> <span class="n">y_subset</span><span class="p">,</span>
+            <span class="n">c</span><span class="o">=</span><span class="n">label_colors</span><span class="p">[</span><span class="n">label</span><span class="p">],</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">scatter_alpha</span><span class="p">,</span>
+            <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">),</span>
+            <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># 2D KDE contours (if enough points)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_subset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Calculate 2D KDE</span>
+                <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">x_subset</span><span class="p">,</span> <span class="n">y_subset</span><span class="p">])</span>
+                <span class="n">kernel</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+                
+                <span class="c1"># Create grid for evaluation</span>
+                <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">x_values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">y_values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y_values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="n">x_min</span><span class="p">:</span><span class="n">x_max</span><span class="p">:</span><span class="mi">100</span><span class="n">j</span><span class="p">,</span> <span class="n">y_min</span><span class="p">:</span><span class="n">y_max</span><span class="p">:</span><span class="mi">100</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">xx</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+                <span class="n">zz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">kernel</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">xx</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                
+                <span class="c1"># Plot contours</span>
+                <span class="n">ax_main</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span>
+                    <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span>
+                    <span class="n">levels</span><span class="o">=</span><span class="n">kde_levels</span><span class="p">,</span>
+                    <span class="n">colors</span><span class="o">=</span><span class="n">label_colors</span><span class="p">[</span><span class="n">label</span><span class="p">],</span>
+                    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
+                    <span class="n">linewidths</span><span class="o">=</span><span class="mf">1.5</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Warning: Could not compute KDE for </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add threshold lines if provided</span>
+    <span class="k">if</span> <span class="n">x_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax_main</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span>
+            <span class="n">x_threshold</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;X threshold: </span><span class="si">{</span><span class="n">x_threshold</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+        <span class="n">ax_top</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">y_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax_main</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
+            <span class="n">y_threshold</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Y threshold: </span><span class="si">{</span><span class="n">y_threshold</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+        <span class="n">ax_right</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    
+    <span class="c1"># Main plot formatting</span>
+    <span class="n">ax_main</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax_main</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax_main</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax_main</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Apply axis limits if percentiles were specified</span>
+    <span class="k">if</span> <span class="n">x_lim_lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">x_lim_upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax_main</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">x_lim_lower</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">x_lim_upper</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">y_lim_lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">y_lim_upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax_main</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="n">y_lim_lower</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">y_lim_upper</span><span class="p">)</span>
+    
+    <span class="c1"># Top marginal (X distribution)</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">unique_labels</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">label</span>
+        <span class="n">x_subset</span> <span class="o">=</span> <span class="n">x_values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_subset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># 1D KDE</span>
+            <span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">x_subset</span><span class="p">)</span>
+            <span class="n">x_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_values</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">200</span><span class="p">)</span>
+            <span class="n">ax_top</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">x_range</span><span class="p">,</span>
+                <span class="n">kde</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">label_colors</span><span class="p">[</span><span class="n">label</span><span class="p">],</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">ax_top</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+                <span class="n">x_range</span><span class="p">,</span>
+                <span class="n">kde</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">label_colors</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+            <span class="p">)</span>
+    
+    <span class="n">ax_top</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax_top</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelbottom</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax_top</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Right marginal (Y distribution)</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">unique_labels</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">label</span>
+        <span class="n">y_subset</span> <span class="o">=</span> <span class="n">y_values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_subset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># 1D KDE</span>
+            <span class="n">kde</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">y_subset</span><span class="p">)</span>
+            <span class="n">y_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y_values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y_values</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">200</span><span class="p">)</span>
+            <span class="n">ax_right</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">kde</span><span class="p">(</span><span class="n">y_range</span><span class="p">),</span>
+                <span class="n">y_range</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">label_colors</span><span class="p">[</span><span class="n">label</span><span class="p">],</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">ax_right</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span>
+                <span class="n">y_range</span><span class="p">,</span>
+                <span class="n">kde</span><span class="p">(</span><span class="n">y_range</span><span class="p">),</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">label_colors</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+            <span class="p">)</span>
+    
+    <span class="n">ax_right</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax_right</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelleft</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax_right</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Title</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Feature Scatter with KDE: </span><span class="si">{</span><span class="n">x_label</span><span class="si">}</span><span class="s1"> vs </span><span class="si">{</span><span class="n">y_label</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.98</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    
+    <span class="c1"># Save logic: save_path takes priority, then results_manager</span>
+    <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Scatter KDE plot saved to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">results_manager</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">results_manager</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;filter_scatter_kde&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Scatter KDE plot saved via results_manager&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;main&#39;</span><span class="p">:</span> <span class="n">ax_main</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="n">ax_top</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">ax_right</span><span class="p">}</span></div>
+
+
+
+<span class="c1"># TODO: Future Phase 2.2+</span>
+<span class="c1"># def create_summary_report(...):</span>
+<span class="c1">#     &quot;&quot;&quot;Generate comprehensive HTML report with all plots and tables.&quot;&quot;&quot;</span>
+<span class="c1">#     pass</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Your Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

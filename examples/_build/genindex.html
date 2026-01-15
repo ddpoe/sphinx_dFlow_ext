@@ -1,0 +1,874 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index &mdash; Elastic Net Analysis - Workflow Documentation 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/workflow.css?v=4ddc2446" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/workflow.js?v=030014fe"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+    }
+});
+</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Elastic Net Analysis - Workflow Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workflow_index.html">Auto-Discovery Workflow Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflow_index.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_index.html#with-custom-options">With Custom Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_index.html#configuration-in-conf-py">Configuration in conf.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_index.html#live-example">Live Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_index.html#discovered-workflow-markers">Discovered Workflow Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow_index.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Python Module Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-elastic_net_modules.model_selection">Model Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets"><code class="docutils literal notranslate"><span class="pre">evaluate_all_feature_sets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.model_selection.apply_1se_rule"><code class="docutils literal notranslate"><span class="pre">apply_1se_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.model_selection.build_final_classifier"><code class="docutils literal notranslate"><span class="pre">build_final_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.model_selection.build_calibrated_classifier"><code class="docutils literal notranslate"><span class="pre">build_calibrated_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.model_selection.find_optimal_threshold"><code class="docutils literal notranslate"><span class="pre">find_optimal_threshold()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-elastic_net_modules.data_loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor"><code class="docutils literal notranslate"><span class="pre">AdataProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_line"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_info"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.adata"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.adata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_coords_obsm_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_coords_obsm_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_params_uns_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_params_uns_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_labels_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_labels_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_label_colors_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_label_colors_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.__init__"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.add_random_forest_feature_set"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_random_forest_feature_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phate_coordinates"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phate_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phase_labels"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phase_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.data_loading.AdataProcessor.process_all"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.process_all()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-elastic_net_modules.feature_engineering">Feature Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.feature_engineering.log_transform_features"><code class="docutils literal notranslate"><span class="pre">log_transform_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations"><code class="docutils literal notranslate"><span class="pre">generate_all_feature_combinations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.feature_engineering.logsumexp10"><code class="docutils literal notranslate"><span class="pre">logsumexp10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.feature_engineering.compute_composite_features"><code class="docutils literal notranslate"><span class="pre">compute_composite_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary"><code class="docutils literal notranslate"><span class="pre">print_feature_set_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-elastic_net_modules.preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation_gmm"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation_gmm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset"><code class="docutils literal notranslate"><span class="pre">apply_percentile_filter_from_subset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net"><code class="docutils literal notranslate"><span class="pre">prepare_data_for_elastic_net()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-elastic_net_modules.nested_cv">Nested Cross-Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.nested_cv.nested_cv_single_feature_set"><code class="docutils literal notranslate"><span class="pre">nested_cv_single_feature_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-elastic_net_modules.results_manager">Results Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#key-features">Key Features:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#typical-usage-flow">Typical Usage Flow:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#classes">Classes:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#functions">Functions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.generate_analysis_id"><code class="docutils literal notranslate"><span class="pre">generate_analysis_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_preprocessing_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.get_checkpoint_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.add_preprocessing_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.create_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-elastic_net_modules.visualization">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_model_selection"><code class="docutils literal notranslate"><span class="pre">plot_model_selection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_coefficient_stability"><code class="docutils literal notranslate"><span class="pre">plot_coefficient_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_feature_importance"><code class="docutils literal notranslate"><span class="pre">plot_feature_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_threshold_sweep"><code class="docutils literal notranslate"><span class="pre">plot_threshold_sweep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_null_distribution"><code class="docutils literal notranslate"><span class="pre">plot_null_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution"><code class="docutils literal notranslate"><span class="pre">plot_bootstrap_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_performance_summary"><code class="docutils literal notranslate"><span class="pre">plot_performance_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.html#elastic_net_modules.visualization.plot_scatter_kde"><code class="docutils literal notranslate"><span class="pre">plot_scatter_kde()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Notebook Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks.html#nested-cv-analysis">Nested CV Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks.html#feature-set-exploration">Feature Set Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks.html#model-evaluation">Model Evaluation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Elastic Net Analysis - Workflow Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.__init__">__init__() (elastic_net_modules.data_loading.AdataProcessor method)</a>
+
+      <ul>
+        <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__">(elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.adata">adata (elastic_net_modules.data_loading.AdataProcessor attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor">AdataProcessor (class in elastic_net_modules.data_loading)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phase_labels">add_phase_labels() (elastic_net_modules.data_loading.AdataProcessor method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phate_coordinates">add_phate_coordinates() (elastic_net_modules.data_loading.AdataProcessor method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info">add_preprocessing_info() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.add_random_forest_feature_set">add_random_forest_feature_set() (elastic_net_modules.data_loading.AdataProcessor method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.additional_info">additional_info (elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.analysis_dir">analysis_dir (elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.analysis_id">analysis_id (elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.model_selection.apply_1se_rule">apply_1se_rule() (in module elastic_net_modules.model_selection)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset">apply_percentile_filter_from_subset() (in module elastic_net_modules.preprocessing)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.base_dir">base_dir (elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.model_selection.build_calibrated_classifier">build_calibrated_classifier() (in module elastic_net_modules.model_selection)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.model_selection.build_final_classifier">build_final_classifier() (in module elastic_net_modules.model_selection)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_info">cell_info (elastic_net_modules.data_loading.AdataProcessor attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_line">cell_line (elastic_net_modules.data_loading.AdataProcessor attribute)</a>
+
+      <ul>
+        <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.cell_line">(elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.feature_engineering.compute_composite_features">compute_composite_features() (in module elastic_net_modules.feature_engineering)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.condition">condition (elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary">create_summary() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.dirs">dirs (elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    elastic_net_modules.data_loading
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.data_loading">module</a>
+</li>
+      </ul></li>
+      <li>
+    elastic_net_modules.feature_engineering
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.feature_engineering">module</a>
+</li>
+      </ul></li>
+      <li>
+    elastic_net_modules.model_selection
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.model_selection">module</a>
+</li>
+      </ul></li>
+      <li>
+    elastic_net_modules.nested_cv
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.nested_cv">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    elastic_net_modules.preprocessing
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.preprocessing">module</a>
+</li>
+      </ul></li>
+      <li>
+    elastic_net_modules.results_manager
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.results_manager">module</a>
+</li>
+      </ul></li>
+      <li>
+    elastic_net_modules.visualization
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.visualization">module</a>
+</li>
+      </ul></li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager">ElasticNetResultsManager (class in elastic_net_modules.results_manager)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets">evaluate_all_feature_sets() (in module elastic_net_modules.model_selection)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.model_selection.find_optimal_threshold">find_optimal_threshold() (in module elastic_net_modules.model_selection)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations">generate_all_feature_combinations() (in module elastic_net_modules.feature_engineering)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.results_manager.generate_analysis_id">generate_analysis_id() (in module elastic_net_modules.results_manager)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir">get_checkpoint_dir() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation">label_ploidy_and_proliferation() (in module elastic_net_modules.preprocessing)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation_gmm">label_ploidy_and_proliferation_gmm() (in module elastic_net_modules.preprocessing)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load">load() (elastic_net_modules.results_manager.ElasticNetResultsManager class method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier">load_final_classifier() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results">load_model_results() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.feature_engineering.log_transform_features">log_transform_features() (in module elastic_net_modules.feature_engineering)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.feature_engineering.logsumexp10">logsumexp10() (in module elastic_net_modules.feature_engineering)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.metadata">metadata (elastic_net_modules.results_manager.ElasticNetResultsManager attribute)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="modules.html#module-elastic_net_modules.data_loading">elastic_net_modules.data_loading</a>
+</li>
+        <li><a href="modules.html#module-elastic_net_modules.feature_engineering">elastic_net_modules.feature_engineering</a>
+</li>
+        <li><a href="modules.html#module-elastic_net_modules.model_selection">elastic_net_modules.model_selection</a>
+</li>
+        <li><a href="modules.html#module-elastic_net_modules.nested_cv">elastic_net_modules.nested_cv</a>
+</li>
+        <li><a href="modules.html#module-elastic_net_modules.preprocessing">elastic_net_modules.preprocessing</a>
+</li>
+        <li><a href="modules.html#module-elastic_net_modules.results_manager">elastic_net_modules.results_manager</a>
+</li>
+        <li><a href="modules.html#module-elastic_net_modules.visualization">elastic_net_modules.visualization</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.nested_cv.nested_cv_single_feature_set">nested_cv_single_feature_set() (in module elastic_net_modules.nested_cv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_label_colors_obs_key">phase_label_colors_obs_key (elastic_net_modules.data_loading.AdataProcessor attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_labels_obs_key">phase_labels_obs_key (elastic_net_modules.data_loading.AdataProcessor attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_coords_obsm_key">phate_coords_obsm_key (elastic_net_modules.data_loading.AdataProcessor attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_params_uns_key">phate_params_uns_key (elastic_net_modules.data_loading.AdataProcessor attribute)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution">plot_bootstrap_distribution() (in module elastic_net_modules.visualization)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_coefficient_stability">plot_coefficient_stability() (in module elastic_net_modules.visualization)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_feature_importance">plot_feature_importance() (in module elastic_net_modules.visualization)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_model_selection">plot_model_selection() (in module elastic_net_modules.visualization)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_null_distribution">plot_null_distribution() (in module elastic_net_modules.visualization)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_performance_summary">plot_performance_summary() (in module elastic_net_modules.visualization)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_scatter_kde">plot_scatter_kde() (in module elastic_net_modules.visualization)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.visualization.plot_threshold_sweep">plot_threshold_sweep() (in module elastic_net_modules.visualization)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net">prepare_data_for_elastic_net() (in module elastic_net_modules.preprocessing)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary">print_feature_set_summary() (in module elastic_net_modules.feature_engineering)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.data_loading.AdataProcessor.process_all">process_all() (elastic_net_modules.data_loading.AdataProcessor method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier">save_final_classifier() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata">save_metadata() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results">save_model_results() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot">save_plot() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+      <li><a href="modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot">save_preprocessing_plot() (elastic_net_modules.results_manager.ElasticNetResultsManager method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Your Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

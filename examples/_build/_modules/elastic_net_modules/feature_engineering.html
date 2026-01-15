@@ -1,0 +1,1166 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>elastic_net_modules.feature_engineering &mdash; Elastic Net Analysis - Workflow Documentation 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/workflow.css?v=4ddc2446" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/workflow.js?v=030014fe"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.2.0/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis'
+    }
+});
+</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.esm.min.mjs";
+
+const defaultStyle = document.createElement('style');
+defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+`;
+document.head.appendChild(defaultStyle);
+
+const fullscreenStyle = document.createElement('style');
+fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+document.head.appendChild(fullscreenStyle);
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+    }
+    return false;
+};
+
+const load = async () => {
+    await mermaid.run();
+
+    const all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(load, 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(load, 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(load, 200);
+        return;
+    }
+
+    const darkTheme = isDarkTheme();
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    const modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    let previousScrollOffset = [window.scrollX, window.scrollY];
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    const allButtons = [];
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        container.appendChild(fullscreenBtn);
+        allButtons.push(fullscreenBtn);
+    });
+
+    // Update theme classes when theme changes
+    const updateTheme = () => {
+        const dark = isDarkTheme();
+        allButtons.forEach(btn => {
+            if (dark) {
+                btn.classList.add('dark-theme');
+            } else {
+                btn.classList.remove('dark-theme');
+            }
+        });
+        if (dark) {
+            modal.classList.add('dark-theme');
+            modalContent.classList.add('dark-theme');
+            closeBtn.classList.add('dark-theme');
+        } else {
+            modal.classList.remove('dark-theme');
+            modalContent.classList.remove('dark-theme');
+            closeBtn.classList.remove('dark-theme');
+        }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+};
+
+window.addEventListener("load", load);
+</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Elastic Net Analysis - Workflow Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow_index.html">Auto-Discovery Workflow Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#with-custom-options">With Custom Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#configuration-in-conf-py">Configuration in conf.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#live-example">Live Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#discovered-workflow-markers">Discovered Workflow Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflow_index.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Python Module Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.model_selection">Model Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.evaluate_all_feature_sets"><code class="docutils literal notranslate"><span class="pre">evaluate_all_feature_sets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.apply_1se_rule"><code class="docutils literal notranslate"><span class="pre">apply_1se_rule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_final_classifier"><code class="docutils literal notranslate"><span class="pre">build_final_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.build_calibrated_classifier"><code class="docutils literal notranslate"><span class="pre">build_calibrated_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.model_selection.find_optimal_threshold"><code class="docutils literal notranslate"><span class="pre">find_optimal_threshold()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.data_loading">Data Loading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor"><code class="docutils literal notranslate"><span class="pre">AdataProcessor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_line"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_line</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.cell_info"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.cell_info</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.adata"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.adata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_coords_obsm_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_coords_obsm_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phate_params_uns_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phate_params_uns_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_labels_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_labels_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.phase_label_colors_obs_key"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.phase_label_colors_obs_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.__init__"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_random_forest_feature_set"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_random_forest_feature_set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phate_coordinates"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phate_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.add_phase_labels"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.add_phase_labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.data_loading.AdataProcessor.process_all"><code class="docutils literal notranslate"><span class="pre">AdataProcessor.process_all()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.feature_engineering">Feature Engineering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.log_transform_features"><code class="docutils literal notranslate"><span class="pre">log_transform_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations"><code class="docutils literal notranslate"><span class="pre">generate_all_feature_combinations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.logsumexp10"><code class="docutils literal notranslate"><span class="pre">logsumexp10()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.compute_composite_features"><code class="docutils literal notranslate"><span class="pre">compute_composite_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary"><code class="docutils literal notranslate"><span class="pre">print_feature_set_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.preprocessing">Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.label_ploidy_and_proliferation_gmm"><code class="docutils literal notranslate"><span class="pre">label_ploidy_and_proliferation_gmm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.apply_percentile_filter_from_subset"><code class="docutils literal notranslate"><span class="pre">apply_percentile_filter_from_subset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.preprocessing.prepare_data_for_elastic_net"><code class="docutils literal notranslate"><span class="pre">prepare_data_for_elastic_net()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.nested_cv">Nested Cross-Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.nested_cv.nested_cv_single_feature_set"><code class="docutils literal notranslate"><span class="pre">nested_cv_single_feature_set()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.results_manager">Results Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#key-features">Key Features:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#typical-usage-flow">Typical Usage Flow:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#classes">Classes:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#functions">Functions:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.generate_analysis_id"><code class="docutils literal notranslate"><span class="pre">generate_analysis_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.__init__"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_metadata"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_model_results"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_model_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_preprocessing_plot"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_preprocessing_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.save_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.save_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load_final_classifier"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load_final_classifier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.get_checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.get_checkpoint_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.add_preprocessing_info"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.add_preprocessing_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.create_summary"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.create_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../modules.html#elastic_net_modules.results_manager.ElasticNetResultsManager.load"><code class="docutils literal notranslate"><span class="pre">ElasticNetResultsManager.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-elastic_net_modules.visualization">Visualization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_model_selection"><code class="docutils literal notranslate"><span class="pre">plot_model_selection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_coefficient_stability"><code class="docutils literal notranslate"><span class="pre">plot_coefficient_stability()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_feature_importance"><code class="docutils literal notranslate"><span class="pre">plot_feature_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_threshold_sweep"><code class="docutils literal notranslate"><span class="pre">plot_threshold_sweep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_null_distribution"><code class="docutils literal notranslate"><span class="pre">plot_null_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_bootstrap_distribution"><code class="docutils literal notranslate"><span class="pre">plot_bootstrap_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_performance_summary"><code class="docutils literal notranslate"><span class="pre">plot_performance_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modules.html#elastic_net_modules.visualization.plot_scatter_kde"><code class="docutils literal notranslate"><span class="pre">plot_scatter_kde()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks.html">Notebook Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#nested-cv-analysis">Nested CV Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#feature-set-exploration">Feature Set Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks.html#model-evaluation">Model Evaluation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Elastic Net Analysis - Workflow Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">elastic_net_modules.feature_engineering</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for elastic_net_modules.feature_engineering</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Feature Engineering Module for Elastic Net Analysis</span>
+
+<span class="sd">This module handles:</span>
+<span class="sd">1. Log transformation of protein intensities (for exploration/validation)</span>
+<span class="sd">2. Generation of all 2^N feature combinations with validation and case-insensitive matching</span>
+<span class="sd">3. Dynamic computation of 6 composite features for each combination:</span>
+<span class="sd">   - SUM_GAS: Sum of activator proteins (cycD1, cycE) - NaN if &lt; 2 present</span>
+<span class="sd">   - SUM_BRAKE: Sum of inhibitor proteins (p21, p27) - NaN if &lt; 2 present</span>
+<span class="sd">   - SUM_ENGINES: Sum of engine proteins (CDK2, CDK4, CDK6) - NaN if &lt; 2 present</span>
+<span class="sd">   - GAS_BRAKE_RATIO: SUM_GAS - SUM_BRAKE (log-space difference) - NaN if either is NaN</span>
+<span class="sd">   - SUM_ACTIVATED_ENGINE: Sum of biologically valid cyclin-CDK products - NaN if &lt; 1 complex</span>
+<span class="sd">   - ACT_ENGINE_BRAKE_RATIO: SUM_ACTIVATED_ENGINE - BRAKE - NaN if no complexes or brakes</span>
+
+<span class="sd">Key Design Principles:</span>
+<span class="sd">- log_transform_features(): Available for exploratory analysis and validation notebooks</span>
+<span class="sd">- In nested CV (Phase 1.2): Log transform happens INSIDE the CV loop to prevent data leakage</span>
+<span class="sd">- generate_all_feature_combinations(): Case-insensitive validation, preserves user&#39;s naming convention</span>
+<span class="sd">- compute_composite_features(): Expects Z-SCORED data as input (mean≈0, std≈1)</span>
+<span class="sd">- Z-scoring is done per fold in nested CV (train scaler fit on train data only)</span>
+<span class="sd">- NaN handling: Composites return NaN when &lt; 2 components (not meaningful sums)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+
+<div class="viewcode-block" id="log_transform_features">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.feature_engineering.log_transform_features">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_transform_features</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">protein_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> 
+                           <span class="n">layer_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;log_transformed&#39;</span><span class="p">,</span>
+                           <span class="n">pseudocount</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply log10 transformation to raw protein intensities.</span>
+<span class="sd">    </span>
+<span class="sd">    This is the first step in feature engineering. Raw protein intensities</span>
+<span class="sd">    are typically highly skewed and need log transformation for:</span>
+<span class="sd">    1. Normalization of distributions</span>
+<span class="sd">    2. Stabilization of variance</span>
+<span class="sd">    3. Biological interpretability (fold changes become linear)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata : AnnData</span>
+<span class="sd">        Single-cell data object with raw protein intensities in .X or a layer</span>
+<span class="sd">    protein_list : list of str</span>
+<span class="sd">        List of protein names to transform (e.g., [&#39;CycD1&#39;, &#39;CycE&#39;, &#39;p21&#39;, ...])</span>
+<span class="sd">    layer_name : str, optional</span>
+<span class="sd">        Name for the new layer to store log-transformed data (default: &#39;log_transformed&#39;)</span>
+<span class="sd">    pseudocount : float, optional</span>
+<span class="sd">        Minimal safety value added before log transform (default: 1e-100)</span>
+<span class="sd">        Data should already be filtered to remove zeros; this is just protection</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        Modifies adata in-place by adding a new layer</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - Data should already be filtered to remove zeros before calling this function</span>
+<span class="sd">    - Minimal pseudocount (1e-100) added as safety net without distorting data</span>
+<span class="sd">    - Uses log10 (base 10) for interpretability</span>
+<span class="sd">    - Stores result in adata.layers[layer_name]</span>
+<span class="sd">    - Original data in adata.X is NOT modified</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import anndata as ad</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; # Create mock data</span>
+<span class="sd">    &gt;&gt;&gt; adata = ad.AnnData(X=np.random.lognormal(0, 1, (100, 7)))</span>
+<span class="sd">    &gt;&gt;&gt; adata.var_names = [&#39;CycD1&#39;, &#39;CycE&#39;, &#39;p21&#39;, &#39;p27&#39;, &#39;CDK2&#39;, &#39;CDK4&#39;, &#39;CDK6&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; log_transform_features(adata, adata.var_names.tolist())</span>
+<span class="sd">    &gt;&gt;&gt; print(adata.layers.keys())  # dict_keys([&#39;log_transformed&#39;])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract raw data for specified proteins</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">X_raw</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="n">protein_list</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">protein_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">protein_list</span><span class="p">]</span>
+        <span class="n">X_raw</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">[:,</span> <span class="n">protein_indices</span><span class="p">]</span>
+    
+    <span class="c1"># Apply log10 transformation with minimal pseudocount for safety</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="n">X_log</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">X_raw</span> <span class="o">+</span> <span class="n">pseudocount</span><span class="p">)</span>
+    
+    <span class="c1"># Create full array to store in layer (must match adata.X shape)</span>
+    <span class="n">X_full</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="s1">&#39;copy&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">protein_indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">protein_list</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">protein_indices</span><span class="p">):</span>
+        <span class="n">X_full</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_log</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+    
+    <span class="c1"># Store in new layer</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_full</span>
+    
+    <span class="c1"># Store metadata about transformation</span>
+    <span class="k">if</span> <span class="s1">&#39;log_transform_params&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">:</span>
+        <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s1">&#39;log_transform_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s1">&#39;log_transform_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;proteins&#39;</span><span class="p">:</span> <span class="n">protein_list</span><span class="p">,</span>
+        <span class="s1">&#39;pseudocount&#39;</span><span class="p">:</span> <span class="n">pseudocount</span><span class="p">,</span>
+        <span class="s1">&#39;layer_name&#39;</span><span class="p">:</span> <span class="n">layer_name</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="generate_all_feature_combinations">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.feature_engineering.generate_all_feature_combinations">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_all_feature_combinations</span><span class="p">(</span>
+    <span class="n">activators</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">inhibitors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">engines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate all 2^N combinations of activators, inhibitors, and engines.</span>
+<span class="sd">    </span>
+<span class="sd">    This creates every possible subset of the N cell cycle proteins, ranging from</span>
+<span class="sd">    the empty set (0 proteins) to the full set (all N proteins). Each combination</span>
+<span class="sd">    becomes a candidate feature set for model evaluation.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    activators : list of str</span>
+<span class="sd">        List of activator proteins (GAS), e.g., [&#39;cycE&#39;, &#39;cycD1&#39;].</span>
+<span class="sd">        Must contain only cyclins: CycD1/cycD1 or CycE/cycE (case-insensitive).</span>
+<span class="sd">        Pass empty list [] to skip validation (for future extensibility).</span>
+<span class="sd">    inhibitors : list of str</span>
+<span class="sd">        List of inhibitor proteins (BRAKE), e.g., [&#39;p21&#39;, &#39;p27&#39;].</span>
+<span class="sd">        Must contain only known inhibitors: p21, p27 (case-insensitive).</span>
+<span class="sd">        Pass empty list [] to skip validation (for future extensibility).</span>
+<span class="sd">    engines : list of str</span>
+<span class="sd">        List of engine proteins (CDKs), e.g., [&#39;CDK2&#39;, &#39;CDK4&#39;, &#39;CDK6&#39;].</span>
+<span class="sd">        Must contain only known CDKs: CDK2, CDK4, CDK6 (case-insensitive).</span>
+<span class="sd">        Pass empty list [] to skip validation (for future extensibility).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    combinations : list of dict</span>
+<span class="sd">        Each dict contains:</span>
+<span class="sd">        - &#39;features&#39;: list of protein names in this combination</span>
+<span class="sd">        - &#39;gas&#39;: subset of activators in this combination</span>
+<span class="sd">        - &#39;brakes&#39;: subset of inhibitors in this combination</span>
+<span class="sd">        - &#39;engine&#39;: subset of engine proteins in this combination</span>
+<span class="sd">        - &#39;name&#39;: human-readable name (e.g., &quot;cycD1_CDK4_p27&quot;)</span>
+<span class="sd">        - &#39;id&#39;: unique integer ID (0 to 2^N-1)</span>
+<span class="sd">        - &#39;n_features&#39;: number of base proteins (before adding composites)</span>
+<span class="sd">        - &#39;valid_complexes&#39;: list of tuples describing valid cyclin-CDK pairs</span>
+<span class="sd">          Example: [(&#39;cycD1&#39;, [&#39;CDK4&#39;, &#39;CDK6&#39;]), (&#39;cycE&#39;, [&#39;CDK2&#39;])]</span>
+<span class="sd">          </span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If any protein name doesn&#39;t match expected cell cycle proteins (case-insensitive).</span>
+<span class="sd">        Empty lists are allowed and skip validation.</span>
+<span class="sd">          </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Expected proteins (case-insensitive):</span>
+<span class="sd">    - GAS (activators): CycD1, CycE</span>
+<span class="sd">    - BRAKE (inhibitors): p21, p27</span>
+<span class="sd">    - ENGINE (catalysts): CDK2, CDK4, CDK6</span>
+<span class="sd">    </span>
+<span class="sd">    Biologically Valid Cyclin-CDK Complexes:</span>
+<span class="sd">    - ✅ CycD1-CDK4 (G1 phase progression)</span>
+<span class="sd">    - ✅ CycD1-CDK6 (G1 phase progression, alternative to CDK4)</span>
+<span class="sd">    - ✅ CycE-CDK2 (G1/S transition)</span>
+<span class="sd">    </span>
+<span class="sd">    Invalid pairings (NOT computed):</span>
+<span class="sd">    - ❌ CycD1-CDK2 (not a natural complex)</span>
+<span class="sd">    - ❌ CycE-CDK4 (not a natural complex)</span>
+<span class="sd">    - ❌ CycE-CDK6 (not a natural complex)</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Standard usage with lowercase names</span>
+<span class="sd">    &gt;&gt;&gt; combos = generate_all_feature_combinations(</span>
+<span class="sd">    ...     activators=[&#39;cycE&#39;, &#39;cycD1&#39;],</span>
+<span class="sd">    ...     inhibitors=[&#39;p21&#39;, &#39;p27&#39;],</span>
+<span class="sd">    ...     engines=[&#39;CDK2&#39;, &#39;CDK4&#39;, &#39;CDK6&#39;]</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; len(combos)</span>
+<span class="sd">    128</span>
+<span class="sd">    &gt;&gt;&gt; # Empty set (model 0)</span>
+<span class="sd">    &gt;&gt;&gt; combos[0]</span>
+<span class="sd">    {&#39;features&#39;: [], &#39;gas&#39;: [], &#39;brakes&#39;: [], &#39;engine&#39;: [], &#39;name&#39;: &#39;empty&#39;, &#39;id&#39;: 0, ...}</span>
+<span class="sd">    &gt;&gt;&gt; # Full set (model 127)</span>
+<span class="sd">    &gt;&gt;&gt; combos[127][&#39;features&#39;]</span>
+<span class="sd">    [&#39;cycE&#39;, &#39;cycD1&#39;, &#39;p21&#39;, &#39;p27&#39;, &#39;CDK2&#39;, &#39;CDK4&#39;, &#39;CDK6&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; # Example with valid complexes (case preserved from input)</span>
+<span class="sd">    &gt;&gt;&gt; combo = [c for c in combos if set(c[&#39;features&#39;]) == {&#39;cycD1&#39;, &#39;CDK4&#39;, &#39;p27&#39;}][0]</span>
+<span class="sd">    &gt;&gt;&gt; combo[&#39;valid_complexes&#39;]</span>
+<span class="sd">    [(&#39;cycD1&#39;, [&#39;CDK4&#39;])]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define expected proteins (case-insensitive validation)</span>
+    <span class="n">EXPECTED_CYCLINS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cycd1&#39;</span><span class="p">,</span> <span class="s1">&#39;cyce&#39;</span><span class="p">}</span>
+    <span class="n">EXPECTED_INHIBITORS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;p21&#39;</span><span class="p">,</span> <span class="s1">&#39;p27&#39;</span><span class="p">}</span>
+    <span class="n">EXPECTED_CDKS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cdk2&#39;</span><span class="p">,</span> <span class="s1">&#39;cdk4&#39;</span><span class="p">,</span> <span class="s1">&#39;cdk6&#39;</span><span class="p">}</span>
+    
+    <span class="c1"># Validate activators (only if non-empty)</span>
+    <span class="k">if</span> <span class="n">activators</span><span class="p">:</span>
+        <span class="n">invalid</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">activators</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EXPECTED_CYCLINS</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid activator proteins: </span><span class="si">{</span><span class="n">invalid</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected (case-insensitive): CycD1 or CycE. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Pass empty list [] to skip validation.&quot;</span>
+            <span class="p">)</span>
+    
+    <span class="c1"># Validate inhibitors (only if non-empty)</span>
+    <span class="k">if</span> <span class="n">inhibitors</span><span class="p">:</span>
+        <span class="n">invalid</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">inhibitors</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EXPECTED_INHIBITORS</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid inhibitor proteins: </span><span class="si">{</span><span class="n">invalid</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected (case-insensitive): p21, p27. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Pass empty list [] to skip validation.&quot;</span>
+            <span class="p">)</span>
+    
+    <span class="c1"># Validate engines (only if non-empty)</span>
+    <span class="k">if</span> <span class="n">engines</span><span class="p">:</span>
+        <span class="n">invalid</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">engines</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">EXPECTED_CDKS</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid engine proteins: </span><span class="si">{</span><span class="n">invalid</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected (case-insensitive): CDK2, CDK4, CDK6. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Pass empty list [] to skip validation.&quot;</span>
+            <span class="p">)</span>
+    
+    <span class="c1"># Helper function for case-insensitive protein matching</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_protein</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if protein name matches target (case-insensitive)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">target</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    
+    <span class="c1"># All proteins</span>
+    <span class="n">all_proteins</span> <span class="o">=</span> <span class="n">activators</span> <span class="o">+</span> <span class="n">inhibitors</span> <span class="o">+</span> <span class="n">engines</span>
+    <span class="n">n_proteins</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_proteins</span><span class="p">)</span>
+    
+    <span class="c1"># Generate all binary combinations (2^n)</span>
+    <span class="n">combinations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">combo_bits</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">product</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="n">n_proteins</span><span class="p">)):</span>
+        <span class="c1"># Select proteins where bit is 1</span>
+        <span class="n">selected_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">all_proteins</span><span class="p">,</span> <span class="n">combo_bits</span><span class="p">)</span> <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        
+        <span class="c1"># Categorize proteins</span>
+        <span class="n">gas_in_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">selected_proteins</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">activators</span><span class="p">]</span>
+        <span class="n">brakes_in_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">selected_proteins</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">inhibitors</span><span class="p">]</span>
+        <span class="n">engine_in_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">selected_proteins</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">engines</span><span class="p">]</span>
+        
+        <span class="c1"># Determine valid cyclin-CDK complexes for this combination (case-insensitive)</span>
+        <span class="n">valid_complexes</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Check CycD1 pathway: CycD1 can pair with CDK4 and/or CDK6</span>
+        <span class="n">cycd1_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">gas_in_set</span> <span class="k">if</span> <span class="n">_is_protein</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;CycD1&#39;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">cycd1_proteins</span><span class="p">:</span>
+            <span class="n">cycd1</span> <span class="o">=</span> <span class="n">cycd1_proteins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Use actual case from user input</span>
+            <span class="n">cycd1_partners</span> <span class="o">=</span> <span class="p">[</span><span class="n">cdk</span> <span class="k">for</span> <span class="n">cdk</span> <span class="ow">in</span> <span class="n">engine_in_set</span> 
+                             <span class="k">if</span> <span class="n">_is_protein</span><span class="p">(</span><span class="n">cdk</span><span class="p">,</span> <span class="s1">&#39;CDK4&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_is_protein</span><span class="p">(</span><span class="n">cdk</span><span class="p">,</span> <span class="s1">&#39;CDK6&#39;</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="n">cycd1_partners</span><span class="p">:</span>
+                <span class="n">valid_complexes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cycd1</span><span class="p">,</span> <span class="n">cycd1_partners</span><span class="p">))</span>
+        
+        <span class="c1"># Check CycE pathway: CycE pairs ONLY with CDK2</span>
+        <span class="n">cyce_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">gas_in_set</span> <span class="k">if</span> <span class="n">_is_protein</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;CycE&#39;</span><span class="p">)]</span>
+        <span class="n">cdk2_proteins</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">engine_in_set</span> <span class="k">if</span> <span class="n">_is_protein</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;CDK2&#39;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">cyce_proteins</span> <span class="ow">and</span> <span class="n">cdk2_proteins</span><span class="p">:</span>
+            <span class="n">valid_complexes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cyce_proteins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">cdk2_proteins</span><span class="p">[</span><span class="mi">0</span><span class="p">]]))</span>
+        
+        <span class="c1"># Create human-readable name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_proteins</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;empty&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">selected_proteins</span><span class="p">)</span>
+        
+        <span class="c1"># Store combination metadata</span>
+        <span class="n">combinations</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">selected_proteins</span><span class="p">,</span>
+            <span class="s1">&#39;n_features&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_proteins</span><span class="p">),</span>
+            <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="n">gas_in_set</span><span class="p">,</span>
+            <span class="s1">&#39;brakes&#39;</span><span class="p">:</span> <span class="n">brakes_in_set</span><span class="p">,</span>
+            <span class="s1">&#39;engine&#39;</span><span class="p">:</span> <span class="n">engine_in_set</span><span class="p">,</span>
+            <span class="s1">&#39;valid_complexes&#39;</span><span class="p">:</span> <span class="n">valid_complexes</span>
+        <span class="p">})</span>
+    
+    <span class="k">return</span> <span class="n">combinations</span></div>
+
+
+
+<div class="viewcode-block" id="logsumexp10">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.feature_engineering.logsumexp10">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">logsumexp10</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate log10(sum(10^values)) for LogSumExp in base 10.</span>
+<span class="sd">    </span>
+<span class="sd">    This helper converts Z-scores (which represent log10 abundances) back to</span>
+<span class="sd">    linear space, sums them, then converts back to log10 space.</span>
+<span class="sd">    </span>
+<span class="sd">    Mathematical relationship:</span>
+<span class="sd">    - If Z = log10(abundance), then abundance = 10^Z</span>
+<span class="sd">    - Sum of abundances = 10^Z1 + 10^Z2 + ...</span>
+<span class="sd">    - Log10 of sum = log10(10^Z1 + 10^Z2 + ...)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    values : list or array-like</span>
+<span class="sd">        List of values in log10 space (Z-scores)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    result : float or np.ndarray</span>
+<span class="sd">        log10(sum(10^values))</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Uses np.logaddexp for numerical stability to avoid overflow/underflow.</span>
+<span class="sd">    Works with both single values and arrays of values.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; logsumexp10([1.0, 2.0])  # log10(10 + 100) = log10(110) ≈ 2.041</span>
+<span class="sd">    2.0413926851582251</span>
+<span class="sd">    &gt;&gt;&gt; logsumexp10([0.0, 0.0])  # log10(1 + 1) = log10(2) ≈ 0.301</span>
+<span class="sd">    0.3010299956639812</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    
+    <span class="n">ln10</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Single list of values</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logaddexp</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="n">ln10</span><span class="p">)</span> <span class="o">/</span> <span class="n">ln10</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Multiple rows (for cell-wise computation)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logaddexp</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="n">ln10</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">ln10</span></div>
+
+
+
+<div class="viewcode-block" id="compute_composite_features">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.feature_engineering.compute_composite_features">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_composite_features</span><span class="p">(</span>
+    <span class="n">X_base</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">feature_set_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute GAS, BRAKE, ENGINES, GAS_BRAKE_RATIO, ACTIVATED_ENGINE, and ACT_ENGINE_BRAKE_RATIO features.</span>
+<span class="sd">    </span>
+<span class="sd">    This is the core innovation of the pipeline. For EACH of the 128 feature sets,</span>
+<span class="sd">    we dynamically calculate 6 composite features based on which proteins are present.</span>
+<span class="sd">    These composites capture biological relationships and improve interpretability.</span>
+<span class="sd">    </span>
+<span class="sd">    CRITICAL: This function expects X_base to be ALREADY Z-SCORE NORMALIZED.</span>
+<span class="sd">    Composite features are computed on Z-scores, not raw values.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_base : np.ndarray, shape (n_cells, n_features)</span>
+<span class="sd">        Log-transformed, Z-score normalized features for selected proteins</span>
+<span class="sd">        MUST be Z-score normalized before calling this function!</span>
+<span class="sd">    feature_set_config : dict</span>
+<span class="sd">        Configuration dict from generate_all_feature_combinations()</span>
+<span class="sd">        Must contain keys: &#39;gas&#39;, &#39;brakes&#39;, &#39;engine&#39;, &#39;valid_complexes&#39;, &#39;features&#39;</span>
+<span class="sd">    feature_names : list of str</span>
+<span class="sd">        Names of features in X_base (must match feature_set_config[&#39;features&#39;])</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_augmented : np.ndarray, shape (n_cells, n_features + 5)</span>
+<span class="sd">        Original features plus [GAS, BRAKE, GAS_BRAKE_RATIO, ACTIVATED_ENGINE, ACT_ENGINE_BRAKE_RATIO]</span>
+<span class="sd">    feature_names_augmented : list of str</span>
+<span class="sd">        Names of all features in X_augmented</span>
+<span class="sd">        </span>
+<span class="sd">    Composite Feature Definitions (All Computed on Z-Scores)</span>
+<span class="sd">    ---------------------------------------------------------</span>
+<span class="sd">    1. **SUM_GAS**: Log10 of sum of activator proteins (CycD1, CycE)</span>
+<span class="sd">       - Uses LogSumExp on Z-scores to approximate log(sum(abundance))</span>
+<span class="sd">       - If &lt; 2 GAS proteins: SUM_GAS = NaN (not a meaningful sum)</span>
+<span class="sd">    </span>
+<span class="sd">    2. **SUM_BRAKE**: Log10 of sum of inhibitor proteins (p21, p27)</span>
+<span class="sd">       - Uses LogSumExp on Z-scores</span>
+<span class="sd">       - If &lt; 2 BRAKE proteins: SUM_BRAKE = NaN (not a meaningful sum)</span>
+<span class="sd">    </span>
+<span class="sd">    3. **SUM_ENGINES**: Log10 of sum of engine proteins (CDK2, CDK4, CDK6)</span>
+<span class="sd">       - Uses LogSumExp on Z-scores</span>
+<span class="sd">       - If &lt; 2 ENGINE proteins: SUM_ENGINES = NaN</span>
+<span class="sd">    </span>
+<span class="sd">    4. **GAS_BRAKE_RATIO**: GAS - BRAKE (allows individual proteins or sums)</span>
+<span class="sd">       - If ≥1 gas AND ≥1 brake: GAS_BRAKE_RATIO = (sum of gas proteins) - (sum of brake proteins)</span>
+<span class="sd">       - If 0 gas OR 0 brake: GAS_BRAKE_RATIO = NaN</span>
+<span class="sd">       - Captures the fundamental &quot;Gas vs Brakes&quot; concept at any scale</span>
+<span class="sd">    </span>
+<span class="sd">    5. **SUM_ACTIVATED_ENGINE**: Log10 of sum of biologically valid cyclin-CDK products</span>
+<span class="sd">       - Complex formation (Mass Action): [Complex] ∝ [Cyclin] * [CDK]</span>
+<span class="sd">       - In Log/Z-score space: Z(Complex) = Z(Cyclin) + Z(CDK)</span>
+<span class="sd">       - Total Activated Engine = LogSumExp(Z(Complex_1), Z(Complex_2), ...)</span>
+<span class="sd">       - If &lt; 1 valid complex: SUM_ACTIVATED_ENGINE = NaN</span>
+<span class="sd">       </span>
+<span class="sd">       Examples:</span>
+<span class="sd">       - {CycD1, CDK4} → Z(CycD1) + Z(CDK4) (1 complex)</span>
+<span class="sd">       - {CycD1, CDK4, CDK6} → LogSumExp( Z(CycD1)+Z(CDK4), Z(CycD1)+Z(CDK6) )</span>
+<span class="sd">    </span>
+<span class="sd">    6. **ACT_ENGINE_BRAKE_RATIO**: SUM_ACTIVATED_ENGINE - BRAKE (allows individual brakes)</span>
+<span class="sd">       - If ≥1 valid complex AND ≥1 brake: ACT_ENGINE_BRAKE_RATIO = SUM_ACTIVATED_ENGINE - (sum of brakes)</span>
+<span class="sd">       - If 0 complexes OR 0 brakes: ACT_ENGINE_BRAKE_RATIO = NaN</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="n">X_base</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_base_features</span> <span class="o">=</span> <span class="n">X_base</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1"># Validate inputs</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">n_base_features</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;feature_names length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;X_base columns (</span><span class="si">{</span><span class="n">n_base_features</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;feature_names must match feature_set_config[&#39;features&#39;]. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="n">feature_names</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="c1"># Create mapping from protein name to column index</span>
+    <span class="n">protein_to_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)}</span>
+    
+    <span class="c1"># Initialize composite features</span>
+    <span class="n">feature_sum_gas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">feature_sum_brake</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">feature_sum_engines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">feature_gas_brake_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">feature_sum_activated_engine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">feature_act_engine_brake_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    
+    <span class="c1"># Helper to apply logsumexp10 to columns (wraps module-level function)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">logsumexp10_cols</span><span class="p">(</span><span class="n">arrays</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply logsumexp10 to a list of column arrays.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">arrays</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="c1"># Stack columns: each array in arrays is shape (n_cells,)</span>
+        <span class="c1"># We want to compute logsumexp10 across columns (axis=1)</span>
+        <span class="n">stacked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span><span class="n">arrays</span><span class="p">)</span>  <span class="c1"># shape: (n_cells, n_arrays)</span>
+        <span class="n">ln10</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logaddexp</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">stacked</span> <span class="o">*</span> <span class="n">ln10</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">ln10</span>
+
+    <span class="c1"># 1. Compute SUM_GAS: LogSumExp of Z-scores of activators (CycD1, CycE)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">gas_cols</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">protein</span> <span class="ow">in</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">protein</span> <span class="ow">in</span> <span class="n">protein_to_idx</span><span class="p">:</span>
+                <span class="n">gas_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">protein</span><span class="p">]])</span>
+        <span class="n">feature_sum_gas</span> <span class="o">=</span> <span class="n">logsumexp10_cols</span><span class="p">(</span><span class="n">gas_cols</span><span class="p">)</span>
+    
+    <span class="c1"># 2. Compute SUM_BRAKE: LogSumExp of Z-scores of inhibitors (p21, p27)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">brake_cols</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">protein</span> <span class="ow">in</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">protein</span> <span class="ow">in</span> <span class="n">protein_to_idx</span><span class="p">:</span>
+                <span class="n">brake_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">protein</span><span class="p">]])</span>
+        <span class="n">feature_sum_brake</span> <span class="o">=</span> <span class="n">logsumexp10_cols</span><span class="p">(</span><span class="n">brake_cols</span><span class="p">)</span>
+    
+    <span class="c1"># 3. Compute SUM_ENGINES: LogSumExp of Z-scores of engine proteins (CDK2, CDK4, CDK6)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">engine_cols</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">protein</span> <span class="ow">in</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">protein</span> <span class="ow">in</span> <span class="n">protein_to_idx</span><span class="p">:</span>
+                <span class="n">engine_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">protein</span><span class="p">]])</span>
+        <span class="n">feature_sum_engines</span> <span class="o">=</span> <span class="n">logsumexp10_cols</span><span class="p">(</span><span class="n">engine_cols</span><span class="p">)</span>
+    
+    <span class="c1"># 4. Compute GAS_BRAKE_RATIO: GAS - BRAKE (allows individual proteins or sums)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Get Gas Component</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">gas_val</span> <span class="o">=</span> <span class="n">feature_sum_gas</span> <span class="c1"># Already computed</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single gas protein</span>
+            <span class="n">gas_val</span> <span class="o">=</span> <span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]]</span>
+            
+        <span class="c1"># Get Brake Component</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">brake_val</span> <span class="o">=</span> <span class="n">feature_sum_brake</span> <span class="c1"># Already computed</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Single brake protein</span>
+            <span class="n">brake_val</span> <span class="o">=</span> <span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]]</span>
+            
+        <span class="n">feature_gas_brake_ratio</span> <span class="o">=</span> <span class="n">gas_val</span> <span class="o">-</span> <span class="n">brake_val</span>
+
+    <span class="c1"># 5. Compute SUM_ACTIVATED_ENGINE: LogSumExp of valid cyclin-CDK products</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;valid_complexes&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">complex_terms</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">cyclin</span><span class="p">,</span> <span class="n">cdk_partners</span> <span class="ow">in</span> <span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;valid_complexes&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">cyclin</span> <span class="ow">in</span> <span class="n">protein_to_idx</span><span class="p">:</span>
+                <span class="n">cyclin_val</span> <span class="o">=</span> <span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">cyclin</span><span class="p">]]</span>
+                
+                <span class="k">for</span> <span class="n">cdk</span> <span class="ow">in</span> <span class="n">cdk_partners</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">cdk</span> <span class="ow">in</span> <span class="n">protein_to_idx</span><span class="p">:</span>
+                        <span class="n">cdk_val</span> <span class="o">=</span> <span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">cdk</span><span class="p">]]</span>
+                        <span class="c1"># Complex = Cyclin * CDK (in linear) =&gt; Cyclin + CDK (in log/Z-score)</span>
+                        <span class="n">complex_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cyclin_val</span> <span class="o">+</span> <span class="n">cdk_val</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">complex_terms</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">complex_terms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">feature_sum_activated_engine</span> <span class="o">=</span> <span class="n">complex_terms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">feature_sum_activated_engine</span> <span class="o">=</span> <span class="n">logsumexp10_cols</span><span class="p">(</span><span class="n">complex_terms</span><span class="p">)</span>
+    
+    <span class="c1"># 6. Compute ACT_ENGINE_BRAKE_RATIO: SUM_ACTIVATED_ENGINE - BRAKE</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;valid_complexes&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Get Engine Component (already computed or NaN)</span>
+        <span class="n">engine_val</span> <span class="o">=</span> <span class="n">feature_sum_activated_engine</span>
+        
+        <span class="c1"># Get Brake Component</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">brake_val</span> <span class="o">=</span> <span class="n">feature_sum_brake</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">brake_val</span> <span class="o">=</span> <span class="n">X_base</span><span class="p">[:,</span> <span class="n">protein_to_idx</span><span class="p">[</span><span class="n">feature_set_config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]]</span>
+            
+        <span class="c1"># Only compute if we have valid engine value</span>
+        <span class="n">feature_act_engine_brake_ratio</span> <span class="o">=</span> <span class="n">engine_val</span> <span class="o">-</span> <span class="n">brake_val</span>
+    
+    <span class="c1"># Stack all features together</span>
+    <span class="c1"># Order: base features, then composites in this specific order</span>
+    <span class="n">X_augmented</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span>
+        <span class="n">X_base</span><span class="p">,</span>
+        <span class="n">feature_sum_gas</span><span class="p">,</span>
+        <span class="n">feature_sum_brake</span><span class="p">,</span>
+        <span class="n">feature_sum_engines</span><span class="p">,</span>
+        <span class="n">feature_gas_brake_ratio</span><span class="p">,</span>
+        <span class="n">feature_sum_activated_engine</span><span class="p">,</span>
+        <span class="n">feature_act_engine_brake_ratio</span>
+    <span class="p">])</span>
+    
+    <span class="c1"># Create augmented feature names (must match column order)</span>
+    <span class="n">feature_names_augmented</span> <span class="o">=</span> <span class="n">feature_names</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="s1">&#39;Feature_SUM_GAS&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Feature_SUM_BRAKE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Feature_SUM_ENGINES&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Feature_GAS_BRAKE_RATIO&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Feature_SUM_ACTIVATED_ENGINE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Feature_ACT_ENGINE_BRAKE_RATIO&#39;</span>
+    <span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">X_augmented</span><span class="p">,</span> <span class="n">feature_names_augmented</span></div>
+
+
+
+<div class="viewcode-block" id="print_feature_set_summary">
+<a class="viewcode-back" href="../../modules.html#elastic_net_modules.feature_engineering.print_feature_set_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_feature_set_summary</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">max_sets</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pretty-print summary of feature set configurations.</span>
+<span class="sd">    </span>
+<span class="sd">    Useful for visual validation and understanding what each model contains.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    feature_set_config : dict or list of dict</span>
+<span class="sd">        Single config or list of configs from generate_all_feature_combinations()</span>
+<span class="sd">    max_sets : int, optional</span>
+<span class="sd">        Maximum number of sets to print (default: 10)</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; combos = generate_all_feature_combinations()</span>
+<span class="sd">    &gt;&gt;&gt; print_feature_set_summary(combos[:5])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Handle single config</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_set_config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature_set_config</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="n">feature_set_config</span><span class="p">[:</span><span class="n">max_sets</span><span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FEATURE SET SUMMARY (showing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span><span class="si">}</span><span class="s2"> sets)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">80</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model ID: </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2"> | Name: </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Base Features (</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;n_features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  GAS (activators):    </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;gas&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  BRAKE (inhibitors):  </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;brakes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ENGINE (CDKs):       </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Valid Complexes:     </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;valid_complexes&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total Features:      </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;n_features&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> base + 5 composite = </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;n_features&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Your Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
