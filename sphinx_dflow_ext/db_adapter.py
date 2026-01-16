@@ -1,14 +1,14 @@
 """
-Database adapter for reading workflow data from generate_workflow_docs database.
+Database adapter for reading workflow data from document_workflow database.
 
 This module provides the bridge between the Sphinx extension and the 
-workflow database created by generate_workflow_docs. Instead of extracting
+workflow database created by dFlow (document_workflow). Instead of extracting
 workflows directly from source files, this reads pre-extracted data from
 the SQLite database.
 
 Architecture:
-    Source Code → generate_workflow_docs (scan) → Database
-    Database → sphinx_workflow_ext (db_adapter) → RST/HTML
+    Source Code → document_workflow (scan) → Database
+    Database → sphinx_dflow_ext (db_adapter) → RST/HTML
 """
 
 import logging

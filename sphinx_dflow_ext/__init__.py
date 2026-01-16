@@ -5,7 +5,7 @@ This extension automatically extracts and renders workflow protocol documentatio
 from Python modules and Jupyter notebooks annotated with workflow markers.
 
 Usage in conf.py:
-    extensions = ['sphinx_workflow_ext']
+    extensions = ['sphinx_dflow_ext']
     
     # Core configuration
     workflow_config = {

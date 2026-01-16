@@ -170,13 +170,13 @@ def process_workflow_docstring(
     
     # Import extractor (from local package copy)
     try:
-        # Extractors are now bundled inside sphinx_workflow_ext package
+        # Extractors are now bundled inside sphinx_dflow_ext package
         from .extractors.multi_tier_module_extractor import MultiTierModuleExtractor
         from .core import ExtractorConfig
         
     except ImportError as e:
         logger.error(f"Failed to import workflow extractor: {e}")
-        logger.error("Make sure generate_workflow_docs is installed")
+        logger.error("Make sure document_workflow is installed")
         return
     
     # Create extractor

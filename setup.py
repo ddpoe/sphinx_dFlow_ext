@@ -28,7 +28,7 @@ setup(
     install_requires=[
         'sphinx>=4.0.0',
         'docutils>=0.17',
-        'generate-workflow-docs>=1.0.0',  # Core workflow extraction library
+        'document-workflow>=3.0.0',  # Core dFlow workflow extraction library
     ],
     extras_require={
         'dev': [

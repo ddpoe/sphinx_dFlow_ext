@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "sphinx-dflow-ext"
+version = "0.1.0"
+description = "Sphinx extension for workflow protocol documentation - integrates with dFlow"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/ddpoe/sphinx_dFlow_ext"
+repository = "https://github.com/ddpoe/sphinx_dFlow_ext"
+keywords = ["sphinx", "documentation", "workflow", "protocols", "extension"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Documentation :: Sphinx",
+    "Framework :: Sphinx :: Extension",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+packages = [{include = "sphinx_dflow_ext"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<4.0"
+sphinx = ">=4.0.0"
+docutils = ">=0.17"
+document-workflow = {path = "../dFlow", develop = true}  # Local dFlow for development
+
+# For PyPI release, use:
+# document-workflow = ">=0.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.0.0"
+pytest-cov = ">=3.0.0"
+sphinx-rtd-theme = ">=1.0.0"
+sphinxcontrib-mermaid = ">=0.7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312']
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
